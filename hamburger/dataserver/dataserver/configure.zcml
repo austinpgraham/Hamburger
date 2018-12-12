@@ -1,0 +1,9 @@
+<configure xmlns='http://namespaces.zope.org/zope'
+           i18n_domain="zope">
+
+  <include package="zope.component" file="meta.zcml" />
+
+  <utility factory="hamburger.dataserver.dataserver.model.Dataserver"
+           provides="hamburger.dataserver.dataserver.interfaces.IDataserver" />
+
+</configure>

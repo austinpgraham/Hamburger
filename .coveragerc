@@ -1,0 +1,3 @@
+[run]
+source = hamburger
+omit = hamburger/test*

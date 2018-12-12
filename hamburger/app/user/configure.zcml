@@ -1,0 +1,8 @@
+<configure xmlns='http://namespaces.zope.org/zope'
+           i18n_domain="zope">
+
+  <adapter factory="hamburger.app.user.adapters._get_user_from_request"
+           provides="hamburger.dataserver.user.interfaces.IUser"
+           for="pyramid.interfaces.IRequest" />
+
+</configure>

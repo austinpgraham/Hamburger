@@ -18,14 +18,14 @@ class IUser(interface.Interface):
                  required=True)
     password = Text(title="User password",
                     required=True)
+    
+    def authenticate(user, request):
+        """
+        Login a give user object.
+        """
 
 
 class IUserCollection(interface.Interface):
     """
     Interface representing the collection of total users.
     """
-
-    def authenticate(user, request):
-        """
-        Login a give user object.
-        """

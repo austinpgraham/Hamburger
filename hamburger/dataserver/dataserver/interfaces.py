@@ -60,3 +60,9 @@ class IContained(interface.Interface):
         """
         Return attribute implementing __key__
         """
+
+
+class IOAuthSettings(interface.Interface):
+    """
+    Interace for oauth settings access
+    """

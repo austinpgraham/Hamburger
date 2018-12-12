@@ -29,3 +29,15 @@ class IUserCollection(interface.Interface):
     """
     Interface representing the collection of total users.
     """
+
+
+class IFacebookUser(IUser):
+    """
+    Interface representing a user logged in with Facebook
+    """
+
+    facebook_id = Text(title="User Facebook ID",
+                       required=True)
+
+    access_token = Text(title="User Facebook Access Token",
+                        required=True)

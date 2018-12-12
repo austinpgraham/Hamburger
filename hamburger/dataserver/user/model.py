@@ -3,6 +3,7 @@ from zope import interface
 from pyramid.security import remember
 
 from hamburger.dataserver.user.interfaces import IUser
+from hamburger.dataserver.user.interfaces import IFacebookUser
 from hamburger.dataserver.user.interfaces import IUserCollection
 
 from hamburger.dataserver.dataserver.model import Contained
@@ -42,6 +43,21 @@ class HamUser(Contained):
         if check_hash(password, self.password):
             return remember(request, self.get_key())
         return None
+
+
+@interface.implementer(IFacebookUser)
+class HamFacebookUser(HamUser):
+    __key__ = "facebook_id"
+
+    def __init__(self, **kwargs):
+        self.facebook_id = kwargs.get('facebook_id', None)
+        self.access_token = kwargs.get('access_token', None)
+        kwargs.pop('facebook_id')
+        super(HamFacebookUser, self).__init__(**kwargs)
+        self.username = self.facebook_id
+    
+    def authenticate(self, request):
+        return remember(request, self.facebook_id)
 
 
 @interface.implementer(IUserCollection)

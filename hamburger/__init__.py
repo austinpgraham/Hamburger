@@ -21,13 +21,17 @@ def root_factory(request):
 
 
 def configure_oauth(settings):
-    key = settings['facebook.key']
-    secret = settings['facebook.secret']
     CONFIG = {
         'fb': {
             'class_': oauth2.Facebook,
-            'consumer_key': key,
-            'consumer_secret': secret,
+            'consumer_key': settings['facebook.key'],
+            'consumer_secret': settings['facebook.secret'],
+            'scope': ['email']
+        },
+        'google': {
+            'class_': oauth2.Google,
+            'consumer_key': settings['google.key'],
+            'consumer_secret': settings['google.secret'],
             'scope': ['email']
         }
     }

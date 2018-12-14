@@ -1,5 +1,6 @@
 from zope import interface
 
+from zope.schema import Dict
 from zope.schema import Text
 
 
@@ -31,7 +32,15 @@ class IUserCollection(interface.Interface):
     """
 
 
-class IFacebookUser(IUser):
+class IOAuthUser(IUser):
+    """
+    OAuth provided user client.
+    """
+    access_token = Dict(title="User Facebook Access Token",
+                        required=True)
+
+
+class IFacebookUser(IOAuthUser):
     """
     Interface representing a user logged in with Facebook
     """
@@ -39,5 +48,8 @@ class IFacebookUser(IUser):
     facebook_id = Text(title="User Facebook ID",
                        required=True)
 
-    access_token = Text(title="User Facebook Access Token",
-                        required=True)
+
+class IGoogleUser(IOAuthUser):
+    """
+    Interface representing a user logged in with Google
+    """

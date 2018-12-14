@@ -3,6 +3,7 @@ from zope import interface
 from pyramid.security import remember
 
 from hamburger.dataserver.user.interfaces import IUser
+from hamburger.dataserver.user.interfaces import IGoogleUser
 from hamburger.dataserver.user.interfaces import IFacebookUser
 from hamburger.dataserver.user.interfaces import IUserCollection
 
@@ -45,19 +46,26 @@ class HamUser(Contained):
         return None
 
 
-@interface.implementer(IFacebookUser)
-class HamFacebookUser(HamUser):
-    __key__ = "facebook_id"
+class _OAuthUser(HamUser):
 
     def __init__(self, **kwargs):
-        self.facebook_id = kwargs.get('facebook_id', None)
         self.access_token = kwargs.get('access_token', None)
-        kwargs.pop('facebook_id')
-        super(HamFacebookUser, self).__init__(**kwargs)
-        self.username = self.facebook_id
-    
+        kwargs.pop('access_token')
+        super(_OAuthUser, self).__init__(**kwargs)
+        self.username = self.email
+
     def authenticate(self, request):
-        return remember(request, self.facebook_id)
+        return remember(request, self.username)
+
+
+@interface.implementer(IFacebookUser)
+class HamFacebookUser(_OAuthUser):
+    pass
+
+
+@interface.implementer(IGoogleUser)
+class HamGoogleUser(_OAuthUser):
+    pass
 
 
 @interface.implementer(IUserCollection)

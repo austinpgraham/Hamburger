@@ -18,16 +18,23 @@ class Dataserver(PersistentMapping):
 @interface.implementer(ICollection)
 class Collection(ExternalPersistentMapping):
 
-    def insert(self, new_obj, check_member=False):
+    def insert(self, new_obj, check_member=False, update_on_found=True):
         if not IContained.providedBy(new_obj):
             raise TypeError("new_obj must implement IContained.")
         key = new_obj.get_key()
         if check_member and key in self:
+            if update_on_found:
+                self.update(new_obj)
             return False
         new_obj.__name__ = new_obj.get_key()
         new_obj.__parent__ = self
         self[new_obj.__name__] = new_obj
         return True
+
+    def update(self, obj):
+        old_obj = self.get(obj.get_key(), None)
+        if old_obj is not None:
+            self[old_obj.get_key()] = obj
 
 
 @interface.implementer(IContained)

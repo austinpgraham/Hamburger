@@ -1,5 +1,6 @@
 from zope import interface
 
+from zope.schema import Dict
 from zope.schema import Text
 
 
@@ -18,14 +19,44 @@ class IUser(interface.Interface):
                  required=True)
     password = Text(title="User password",
                     required=True)
-    
+
     def authenticate(user, request):
         """
         Login a give user object.
+        """
+
+    def deauthenticate(request):
+        """
+        Logout a user
+        """
+
+    def check_auth():
+        """
+        Check user authentication still valid.
         """
 
 
 class IUserCollection(interface.Interface):
     """
     Interface representing the collection of total users.
+    """
+
+
+class IOAuthUser(IUser):
+    """
+    OAuth provided user client.
+    """
+    access_token = Dict(title="User Facebook Access Token",
+                        required=True)
+
+
+class IFacebookUser(IOAuthUser):
+    """
+    Interface representing a user logged in with Facebook
+    """
+
+
+class IGoogleUser(IOAuthUser):
+    """
+    Interface representing a user logged in with Google
     """

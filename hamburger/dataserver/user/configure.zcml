@@ -1,0 +1,10 @@
+<configure xmlns='http://namespaces.zope.org/zope'
+           i18n_domain="zope">
+
+  <include package="zope.component" file="meta.zcml" />
+
+  <subscriber provides="hamburger.dataserver.user.interfaces.IUserCollection"
+              for="pyramid.interfaces.IRequest"
+              factory="hamburger.dataserver.user.subscribers._get_user_collection" />
+
+</configure>

@@ -19,10 +19,20 @@ class IUser(interface.Interface):
                  required=True)
     password = Text(title="User password",
                     required=True)
-    
+
     def authenticate(user, request):
         """
         Login a give user object.
+        """
+
+    def deauthenticate(request):
+        """
+        Logout a user
+        """
+
+    def check_auth():
+        """
+        Check user authentication still valid.
         """
 
 
@@ -44,9 +54,6 @@ class IFacebookUser(IOAuthUser):
     """
     Interface representing a user logged in with Facebook
     """
-
-    facebook_id = Text(title="User Facebook ID",
-                       required=True)
 
 
 class IGoogleUser(IOAuthUser):

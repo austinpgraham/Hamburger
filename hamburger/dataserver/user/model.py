@@ -1,5 +1,8 @@
+import time
+
 from zope import interface
 
+from pyramid.security import forget
 from pyramid.security import remember
 
 from hamburger.dataserver.user.interfaces import IUser
@@ -45,6 +48,12 @@ class HamUser(Contained):
             return remember(request, self.get_key())
         return None
 
+    def deauthenticate(self, request):
+        return forget(request)
+    
+    def check_auth(self):
+        return True
+
 
 class _OAuthUser(HamUser):
 
@@ -56,6 +65,16 @@ class _OAuthUser(HamUser):
 
     def authenticate(self, request):
         return remember(request, self.username)
+
+    def deauthenticate(self, request):
+        self.access_token = None
+        return forget(request)
+
+    def check_auth(self):
+        if self.access_token is not None:
+            exp_date = self.access_token['exp_date']
+            now = time.time()
+            return self if now < exp_date else None
 
 
 @interface.implementer(IFacebookUser)

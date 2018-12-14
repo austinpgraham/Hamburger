@@ -1,11 +1,11 @@
+import time
+
 from authomatic.adapters import WebObAdapter
 
 from pyramid.view import view_config
 from pyramid.view import view_defaults
 
 from pyramid.response import Response
-
-from pyramid.security import forget
 
 from pyramid.httpexceptions import HTTPOk
 from pyramid.httpexceptions import HTTPCreated
@@ -68,10 +68,9 @@ class LoginUserView(AbstractView):
 class LogoutUserView(AbstractAuthenticatedView):
 
     def __call__(self):
-        super(LogoutUserView, self).__call__()
-        if self.auth_user != self.context.username:
+        if self.auth_user is None or self.auth_user.username != self.context.username:
             return HTTPForbidden()
-        headers = forget(self.request)
+        headers = self.context.deauthenticate(self.request)
         return HTTPOk(headers=headers)
 
 
@@ -80,6 +79,11 @@ class LogoutUserView(AbstractAuthenticatedView):
 class OAuthUserLoginView(AbstractView):
     __provider__ = None
     __user_class__ = None
+
+    def _stamp_time(self, data):
+        now = time.time()
+        exp_date = float(data['expires_in']) + now
+        data['exp_date'] = exp_date
 
     def __call__(self):
         response = Response()
@@ -91,6 +95,7 @@ class OAuthUserLoginView(AbstractView):
             elif result.user:
                 if not (result.user.name and result.user.id):
                     result.user.update()
+                self._stamp_time(result.provider.access_token_response.data)
                 new_user = self.__user_class__(first_name=result.user.first_name,
                                                last_name=result.user.last_name,
                                                email=result.user.email,

@@ -2,8 +2,10 @@ import time
 
 from zope import interface
 
+from pyramid.security import Allow
 from pyramid.security import forget
 from pyramid.security import remember
+from pyramid.security import Authenticated
 
 from hamburger.dataserver.user.interfaces import IUser
 from hamburger.dataserver.user.interfaces import IGoogleUser
@@ -21,6 +23,9 @@ from hamburger.dataserver.dataserver.security import check_hash
 class HamUser(Contained):
 
     __key__ = "username"
+    __acl__ = [
+        (Allow, Authenticated, 'view'),
+    ]
 
     KEYS = [
         'username',
@@ -52,7 +57,7 @@ class HamUser(Contained):
         return forget(request)
     
     def check_auth(self):
-        return True
+        return self
 
 
 class _OAuthUser(HamUser):

@@ -9,6 +9,7 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
     CHANGES = f.read()
 
 requires = [
+    'authomatic',
     'RestrictedPython>=4.0a1'
     'wheel',
     'zope',

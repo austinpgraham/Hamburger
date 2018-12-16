@@ -56,7 +56,7 @@ class LoginUserView(AbstractView):
         if 'password' not in self.request.json:
             return HTTPBadRequest()
         password = self.request.json['password']
-        headers = self.context.authenticate(self.request)
+        headers = self.context.authenticate(password, self.request)
         if headers is None:
             return HTTPForbidden()
         return HTTPOk(headers=headers)
@@ -68,7 +68,7 @@ class LoginUserView(AbstractView):
 class LogoutUserView(AbstractAuthenticatedView):
 
     def __call__(self):
-        if self.auth_user is None or self.auth_user.username != self.context.username:
+        if self.auth_user.username != self.context.username:
             return HTTPForbidden()
         headers = self.context.deauthenticate(self.request)
         return HTTPOk(headers=headers)

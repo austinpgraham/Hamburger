@@ -28,10 +28,9 @@ class AbstractAuthenticatedView(AbstractView):
 
 
 @view_defaults(request_method="GET",
-               renderer="json")
+               renderer="json",
+               permission="view")
 class AbstractResourceGetView(AbstractAuthenticatedView):
 
     def __call__(self):
-        if self.auth_user is None:
-            return HTTPForbidden()
         return self.context.to_json()

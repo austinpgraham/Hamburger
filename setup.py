@@ -20,10 +20,13 @@ requires = [
     'pyramid_tm',
     'pyramid_zodbconn',
     'pyramid_zcml',
+    'pyramid_retry',
     'transaction',
     'ZODB3',
     'waitress',
-    'bcrypt'
+    'bcrypt',
+    'psycopg2',
+    'relstorage'
     ]
 
 tests_require = [

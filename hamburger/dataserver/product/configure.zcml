@@ -1,0 +1,8 @@
+<configure xmlns='http://namespaces.zope.org/zope'
+           i18n_domain="zope">
+    
+    <subscriber provides="hamburger.dataserver.product.interfaces.IProductCollection"
+            for="pyramid.interfaces.IRequest"
+            factory="hamburger.dataserver.product.subscribers._get_product_collection" />
+
+</configure>

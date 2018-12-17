@@ -43,9 +43,6 @@ class HamProduct(Contained):
 
 @interface.implementer(IProductCollection)
 class HamProductCollection(Collection, Contained):
-    __acl__ = [
-        (Allow, Authenticated, "edit"),
-    ]
     __key__ = "title"
 
     KEYS = [
@@ -77,12 +74,21 @@ class HamProductCollection(Collection, Contained):
         return super(HamProductCollection, self).insert(new_obj, check_member=check_member)
 
     def to_json(self):
-        if not self.is_public:
-            return None
         result = super(HamProductCollection, self).to_json()
         result['created_at'] = str(result['created_at'])
         return result
 
+    @property
+    def owner(self):
+        return self.__parent__.__parent__
+
+    def __acl__(self):
+        perms = [(Allow, self.owner.username, "edit")]
+        if self.is_public:
+            perms.append((Allow, Authenticated, "view"))
+        else:
+            perms.append((Allow, self.owner.username, "view"))
+        return perms
 
 @interface.implementer(IUserProductListCollection)
 class HamUserProductListCollection(Collection):

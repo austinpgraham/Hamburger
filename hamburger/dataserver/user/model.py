@@ -47,6 +47,7 @@ class HamUser(Contained):
         self.email = email
         self.password = password
         self._lists = HamUserProductListCollection()
+        self._lists.__parent__ = self
 
     def authenticate(self, password, request):
         if check_hash(password, self.password):

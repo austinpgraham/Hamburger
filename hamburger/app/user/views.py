@@ -128,6 +128,7 @@ class CreateWishlistView(AbstractAuthenticatedView):
 
     def __call__(self):
         pc = HamProductCollection.from_json(self.request.json)
+        pc.__parent__ = self.context
         if pc is None:
             return HTTPBadRequest()
         if pc.title in self.context:

@@ -1,7 +1,9 @@
 from zope import interface
 
+from zope.schema import Bool
 from zope.schema import Text
 from zope.schema import Float
+from zope.schema import Datetime
 
 from hamburger.dataserver.dataserver.interfaces import ICollection
 
@@ -28,3 +30,17 @@ class IProduct(interface.Interface):
 
     price = Float(title="Product Price",
                   required=True)
+
+
+class IUserProductListCollection(ICollection):
+    """
+    A collection of product lists
+    """
+    title = Text(title="Title of the list",
+                 required=True)
+
+    created_at = Datetime(title="Date of list creation",
+                          required=True)
+
+    is_public = Bool(title="Privacy of this list",
+                     required=True)

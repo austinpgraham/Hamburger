@@ -13,7 +13,8 @@ def appmaker(zodb_root):
         zodb_root['app_root'] = app_root
         usercollection = HamUserCollection()
         app_root[usercollection.__name__] = usercollection
-        productcollection = HamProductCollection()
+        productcollection = HamProductCollection(title="allproducts",
+                                                  is_public=True)
         app_root[productcollection.__name__] = productcollection
         import transaction
         transaction.commit()

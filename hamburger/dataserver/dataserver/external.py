@@ -16,7 +16,11 @@ class AbstractExternal():
         result = {}
         for k in self.KEYS:
             if k not in self.EXCLUDE:
-                result[k] = getattr(self, k)
+                val = getattr(self, k)
+                if IExternalPersistent.providedBy(val):
+                    result[k] = val.to_json()
+                else:
+                    result[k] = val
         return result
 
     def is_complete(self):
@@ -36,4 +40,14 @@ class ExternalPersistent(Persistent, AbstractExternal):
 
 @interface.implementer(IExternalPersistent)
 class ExternalPersistentMapping(PersistentMapping, AbstractExternal):
-    pass
+
+    def to_json(self):
+        result = super(ExternalPersistentMapping, self).to_json()
+        result['items'] = items = {}
+        for key in self:
+            obj = self[key]
+            if IExternalPersistent.providedBy(obj):
+                obj = obj.to_json()
+                if obj is not None:
+                    items[key] = obj
+        return result

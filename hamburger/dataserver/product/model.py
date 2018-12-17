@@ -42,11 +42,29 @@ class HamProduct(Contained):
 
 
 @interface.implementer(IProductCollection)
-class HamProductCollection(Collection):
-    __name__ = "products"
+class HamProductCollection(Collection, Contained):
     __acl__ = [
         (Allow, Authenticated, "edit"),
     ]
+    __key__ = "title"
+
+    KEYS = [
+        "title",
+        "is_public",
+        "created_at",
+        "access_token"
+    ]
+
+    def _gen_token(self):
+        return hash(self.title + str(randint(00000, 99999)))
+
+    def __init__(self, title=None, is_public=False):
+        super(HamProductCollection, self).__init__()
+        self.title = title
+        self.__name__ = self.title
+        self.is_public = is_public
+        self.created_at = DateTime()
+        self.access_token = "" if is_public else self._gen_token()
 
     def _prevent_collision(self, new_obj):
         while new_obj.hamid in self:
@@ -58,15 +76,17 @@ class HamProductCollection(Collection):
         self._prevent_collision(new_obj)
         return super(HamProductCollection, self).insert(new_obj, check_member=check_member)
 
+    def to_json(self):
+        if not self.is_public:
+            return None
+        result = super(HamProductCollection, self).to_json()
+        result['created_at'] = str(result['created_at'])
+        return result
+
 
 @interface.implementer(IUserProductListCollection)
 class HamUserProductListCollection(Collection):
-    __name__ = "products"
-
-    def __init__(self, title=None, is_public=False):
-        self.title = title
-        self.is_public = is_public
-        self.created_at = DateTime()
+    __name__ = "wishlists"
 
     def insert(self, new_obj, check_member=False):
         if not IProductCollection.providedBy(new_obj):

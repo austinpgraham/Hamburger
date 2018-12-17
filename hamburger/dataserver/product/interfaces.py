@@ -32,9 +32,9 @@ class IProduct(interface.Interface):
                   required=True)
 
 
-class IUserProductListCollection(ICollection):
+class IUserProductWishlist(ICollection):
     """
-    A collection of product lists
+    A user product wishilist
     """
     title = Text(title="Title of the list",
                  required=True)
@@ -44,3 +44,12 @@ class IUserProductListCollection(ICollection):
 
     is_public = Bool(title="Privacy of this list",
                      required=True)
+    
+    access_token = Text(title="Access token to share this wishlist",
+                        required=True)
+
+
+class IUserProductListCollection(ICollection):
+    """
+    Collection of product lists
+    """

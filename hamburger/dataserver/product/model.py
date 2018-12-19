@@ -65,14 +65,9 @@ class HamProductCollection(Collection, Contained):
         self.created_at = DateTime()
         self.access_token = "" if is_public else self._gen_token()
 
-    def _prevent_collision(self, new_obj):
-        while new_obj.hamid in self:
-            new_obj.hamid += str(randint(00000, 99999))
-
-    def insert(self, new_obj, check_member=False):
+    def insert(self, new_obj, check_member=True):
         if not IProduct.providedBy(new_obj):
             raise ValueError("Cannot add non-IProduct to IProductCollection")
-        self._prevent_collision(new_obj)
         return super(HamProductCollection, self).insert(new_obj, check_member=check_member)
 
     def to_json(self, request):
@@ -92,6 +87,7 @@ class HamProductCollection(Collection, Contained):
         else:
             perms.extend([(Allow, self.owner.username, "view"), (Deny, Everyone, "view")])
         return perms
+
 
 @interface.implementer(IUserProductListCollection)
 class HamUserProductListCollection(Collection):

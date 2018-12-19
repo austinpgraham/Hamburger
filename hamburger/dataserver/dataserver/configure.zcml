@@ -5,5 +5,10 @@
 
   <utility factory="hamburger.dataserver.dataserver.model.Dataserver"
            provides="hamburger.dataserver.dataserver.interfaces.IDataserver" />
+  
+  <adapter factory="hamburger.dataserver.dataserver.adapters._ExternalAdapter"
+           provides="hamburger.dataserver.dataserver.interfaces.IExternalizedObject"
+           for="hamburger.dataserver.dataserver.interfaces.IExternalObject
+                pyramid.interfaces.IRequest" />
 
 </configure>

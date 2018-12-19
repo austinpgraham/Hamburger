@@ -6,6 +6,8 @@ from zope import component
 
 from hamburger.dataserver.user.interfaces import IUserCollection
 
+from hamburger.dataserver.dataserver.adapters import to_external_object
+
 
 class AbstractView():
 
@@ -33,4 +35,5 @@ class AbstractAuthenticatedView(AbstractView):
 class AbstractResourceGetView(AbstractAuthenticatedView):
 
     def __call__(self):
-        return self.context.to_json()
+        obj = to_external_object(self.context, self.request)
+        return obj

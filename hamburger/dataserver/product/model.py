@@ -2,7 +2,9 @@ from DateTime import DateTime
 
 from random import randint
 
+from pyramid.security import Deny
 from pyramid.security import Allow
+from pyramid.security import Everyone
 from pyramid.security import Authenticated
 
 from zope import interface
@@ -73,8 +75,8 @@ class HamProductCollection(Collection, Contained):
         self._prevent_collision(new_obj)
         return super(HamProductCollection, self).insert(new_obj, check_member=check_member)
 
-    def to_json(self):
-        result = super(HamProductCollection, self).to_json()
+    def to_json(self, request):
+        result = super(HamProductCollection, self).to_json(request)
         result['created_at'] = str(result['created_at'])
         return result
 
@@ -82,12 +84,13 @@ class HamProductCollection(Collection, Contained):
     def owner(self):
         return self.__parent__.__parent__
 
+    @property
     def __acl__(self):
         perms = [(Allow, self.owner.username, "edit")]
         if self.is_public:
             perms.append((Allow, Authenticated, "view"))
         else:
-            perms.append((Allow, self.owner.username, "view"))
+            perms.extend([(Allow, self.owner.username, "view"), (Deny, Everyone, "view")])
         return perms
 
 @interface.implementer(IUserProductListCollection)

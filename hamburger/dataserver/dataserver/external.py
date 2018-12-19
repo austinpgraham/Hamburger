@@ -4,6 +4,7 @@ from persistent.mapping import PersistentMapping
 
 from zope import interface
 
+from hamburger.dataserver.dataserver.interfaces import IExternalObject
 from hamburger.dataserver.dataserver.interfaces import IExternalPersistent
 
 
@@ -12,13 +13,13 @@ class AbstractExternal():
     KEYS = []
     EXCLUDE = []
 
-    def to_json(self):
+    def to_json(self, request):
         result = {}
         for k in self.KEYS:
             if k not in self.EXCLUDE:
                 val = getattr(self, k)
-                if IExternalPersistent.providedBy(val):
-                    result[k] = val.to_json()
+                if IExternalObject.providedBy(val) and request.has_permission("view", val):
+                    result[k] = val.to_json(request)
                 else:
                     result[k] = val
         return result
@@ -41,13 +42,13 @@ class ExternalPersistent(Persistent, AbstractExternal):
 @interface.implementer(IExternalPersistent)
 class ExternalPersistentMapping(PersistentMapping, AbstractExternal):
 
-    def to_json(self):
-        result = super(ExternalPersistentMapping, self).to_json()
+    def to_json(self, request):
+        result = super(ExternalPersistentMapping, self).to_json(request)
         result['items'] = items = {}
         for key in self:
             obj = self[key]
-            if IExternalPersistent.providedBy(obj):
-                obj = obj.to_json()
+            if IExternalObject.providedBy(obj) and request.has_permission("view", context=obj):
+                obj = obj.to_json(request)
                 if obj is not None:
                     items[key] = obj
         return result

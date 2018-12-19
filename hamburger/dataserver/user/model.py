@@ -14,6 +14,8 @@ from hamburger.dataserver.user.interfaces import IUserCollection
 
 from hamburger.dataserver.product.model import HamUserProductListCollection
 
+from hamburger.dataserver.dataserver.adapters import to_external_object
+
 from hamburger.dataserver.dataserver.model import Contained
 from hamburger.dataserver.dataserver.model import Collection
 
@@ -71,9 +73,9 @@ class HamUser(Contained):
     def __contains__(self, val):
         return val in self._lists
 
-    def to_json(self):
-        result = super(HamUser, self).to_json()
-        result['wishlists'] = self._lists.to_json()
+    def to_json(self, request):
+        result = super(HamUser, self).to_json(request)
+        result['wishlists'] = to_external_object(self._lists, request)
         return result
 
     def __acl__(self):

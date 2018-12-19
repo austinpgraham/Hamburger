@@ -3,5 +3,6 @@
 
   <include package="hamburger.dataserver.dataserver" />
   <include package="hamburger.dataserver.user" />
+  <include package="hamburger.dataserver.product" />
   
 </configure>

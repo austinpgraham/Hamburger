@@ -21,6 +21,8 @@ from hamburger.app import AbstractAuthenticatedView
 
 from hamburger.dataserver.dataserver.interfaces import IOAuthSettings
 
+from hamburger.dataserver.product.model import HamProductCollection
+
 from hamburger.dataserver.user.interfaces import IUser
 from hamburger.dataserver.user.interfaces import IUserCollection
 
@@ -116,3 +118,20 @@ class LoginUserFacebookView(OAuthUserLoginView):
 class LoginUserGoogleView(OAuthUserLoginView):
     __provider__ = "google"
     __user_class__ = HamGoogleUser
+
+
+@view_config(context=IUser,
+             name="wishlists",
+             request_method="POST",
+             permission="edit")
+class CreateWishlistView(AbstractAuthenticatedView):
+
+    def __call__(self):
+        pc = HamProductCollection.from_json(self.request.json)
+        pc.__parent__ = self.context
+        if pc is None:
+            return HTTPBadRequest()
+        if pc.title in self.context:
+            return HTTPConflict()
+        self.context[pc.__name__] = pc
+        return HTTPCreated()

@@ -1,0 +1,8 @@
+<configure xmlns='http://namespaces.zope.org/zope'
+           i18n_domain="zope">
+
+    <adapter factory="hamburger.app.product.adapters._get_product_from_request"
+             provides="hamburger.dataserver.product.interfaces.IProduct"
+             for="pyramid.interfaces.IRequest" />
+
+</configure>

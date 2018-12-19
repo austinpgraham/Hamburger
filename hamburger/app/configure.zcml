@@ -2,5 +2,6 @@
            i18n_domain="zope">
 
   <include package="hamburger.app.user" />
+  <include package="hamburger.app.product" />
 
 </configure>

@@ -10,7 +10,19 @@ class IDataserver(interface.Interface):
     """
 
 
-class IExternalPersistent(interface.Interface):
+class IExternalObject(interface.Interface):
+    """
+    A base external object.
+    """
+
+
+class IExternalizedObject(interface.Interface):
+    """
+    A fully externalized object.
+    """
+
+
+class IExternalPersistent(IExternalObject):
     """
     Interface marking a class that is persistent
     and externalizable.

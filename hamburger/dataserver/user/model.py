@@ -12,6 +12,10 @@ from hamburger.dataserver.user.interfaces import IGoogleUser
 from hamburger.dataserver.user.interfaces import IFacebookUser
 from hamburger.dataserver.user.interfaces import IUserCollection
 
+from hamburger.dataserver.product.model import HamUserProductListCollection
+
+from hamburger.dataserver.dataserver.adapters import to_external_object
+
 from hamburger.dataserver.dataserver.model import Contained
 from hamburger.dataserver.dataserver.model import Collection
 
@@ -23,20 +27,17 @@ from hamburger.dataserver.dataserver.security import check_hash
 class HamUser(Contained):
 
     __key__ = "username"
-    __acl__ = [
-        (Allow, Authenticated, 'view'),
-    ]
 
     KEYS = [
         'username',
         'first_name',
         'last_name',
         'email',
-        'password'
+        'password',
     ]
 
     EXCLUDE = [
-        'password'
+        'password',
     ]
 
     def __init__(self, username=None, first_name=None,
@@ -47,6 +48,8 @@ class HamUser(Contained):
         self.last_name = last_name
         self.email = email
         self.password = password
+        self._lists = HamUserProductListCollection()
+        self._lists.__parent__ = self
 
     def authenticate(self, password, request):
         if check_hash(password, self.password):
@@ -55,9 +58,31 @@ class HamUser(Contained):
 
     def deauthenticate(self, request):
         return forget(request)
-    
+
     def check_auth(self):
         return self
+
+    def __getitem__(self, key):
+        if key not in self._lists:
+            raise KeyError("{} not in {}'s collection.".format(key, self.username))
+        return self._lists[key]
+
+    def __setitem__(self, key, obj):
+        self._lists.insert(obj, check_member=True)
+
+    def __contains__(self, val):
+        return val in self._lists
+
+    def to_json(self, request):
+        result = super(HamUser, self).to_json(request)
+        result['wishlists'] = to_external_object(self._lists, request)
+        return result
+
+    def __acl__(self):
+        return [
+            (Allow, Authenticated, "view"),
+            (Allow, self.username, "edit")
+        ]
 
 
 class _OAuthUser(HamUser):

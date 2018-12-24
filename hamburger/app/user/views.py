@@ -19,6 +19,7 @@ from hamburger.app import AbstractView
 from hamburger.app import AbstractResourceGetView
 from hamburger.app import AbstractAuthenticatedView
 
+from hamburger.dataserver.dataserver.interfaces import IDataserver
 from hamburger.dataserver.dataserver.interfaces import IOAuthSettings
 
 from hamburger.dataserver.product.model import HamProductCollection
@@ -59,8 +60,8 @@ class LoginUserView(AbstractView):
             return HTTPBadRequest()
         password = self.request.json['password']
         headers = self.context.authenticate(password, self.request)
-        if headers is None:
-            return HTTPForbidden()
+        if len(headers) == 1:
+            return HTTPForbidden(headers=headers)
         return HTTPOk(headers=headers)
 
 
@@ -135,3 +136,15 @@ class CreateWishlistView(AbstractAuthenticatedView):
             return HTTPConflict()
         self.context[pc.__name__] = pc
         return HTTPCreated()
+
+
+@view_config(context=IDataserver,
+             name="auth",
+             request_method="GET",
+             renderer="json")
+class VerifyAuthView(AbstractAuthenticatedView):
+
+    def __call__(self):
+        if self.auth_user is None:
+            return HTTPForbidden()
+        return {"username": self.auth_user.username}

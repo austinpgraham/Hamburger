@@ -60,7 +60,7 @@ class LoginUserView(AbstractView):
             return HTTPBadRequest()
         password = self.request.json['password']
         headers = self.context.authenticate(password, self.request)
-        if len(headers) == 1:
+        if headers is None:
             return HTTPForbidden(headers=headers)
         return HTTPOk(headers=headers)
 

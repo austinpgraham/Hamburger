@@ -6,5 +6,10 @@
   <subscriber provides="hamburger.dataserver.user.interfaces.IUserCollection"
               for="pyramid.interfaces.IRequest"
               factory="hamburger.dataserver.user.subscribers._get_user_collection" />
+  
+  <adapter provides="hamburger.dataserver.user.interfaces.IPermissionCollection"
+           for="hamburger.dataserver.user.interfaces.IUser
+                hamburger.dataserver.dataserver.interfaces.IPermissionedObject"
+           factory="hamburger.dataserver.user.adapters.get_permission_collection" />
 
 </configure>

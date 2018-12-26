@@ -1,16 +1,20 @@
+import copy
 import time
 
 from zope import interface
+from zope import component
 
 from pyramid.security import Allow
 from pyramid.security import forget
 from pyramid.security import remember
+from pyramid.security import Everyone
 from pyramid.security import Authenticated
 
 from hamburger.dataserver.user.interfaces import IUser
 from hamburger.dataserver.user.interfaces import IGoogleUser
 from hamburger.dataserver.user.interfaces import IFacebookUser
 from hamburger.dataserver.user.interfaces import IUserCollection
+from hamburger.dataserver.user.interfaces import IPermissionCollection
 
 from hamburger.dataserver.product.model import HamUserProductListCollection
 
@@ -75,7 +79,12 @@ class HamUser(Contained):
 
     def to_json(self, request):
         result = super(HamUser, self).to_json(request)
-        result['wishlists'] = to_external_object(self._lists, request)
+        lists = copy.deepcopy(self._lists)
+        for _list in lists:
+            _list = lists[_list]
+            permissions = component.queryMultiAdapter((self, _list), IPermissionCollection)
+            _list.permissions = permissions
+        result['wishlists'] = to_external_object(lists, request)
         return result
 
     def __acl__(self):

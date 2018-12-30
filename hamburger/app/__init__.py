@@ -21,7 +21,8 @@ class AbstractAuthenticatedView(AbstractView):
 
     def __init__(self, context, request):
         super(AbstractAuthenticatedView, self).__init__(context, request)
-        self.auth_user = IAuthedUser(request)
+        found_user = IAuthedUser(request)
+        self.auth_user = None if found_user.is_empty() else found_user
 
 
 @view_defaults(request_method="GET",

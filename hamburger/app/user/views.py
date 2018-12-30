@@ -148,3 +148,19 @@ class VerifyAuthView(AbstractAuthenticatedView):
         if self.auth_user is None:
             return HTTPForbidden()
         return {"username": self.auth_user.username}
+
+
+@view_config(context=IUserCollection,
+             name="search",
+             request_method="GET",
+             renderer="json")
+class SearchUserView(AbstractAuthenticatedView):
+
+    def __call__(self):
+        if self.auth_user is None:
+            return HTTPForbidden()
+        if "query" not in self.request.params:
+            return HTTPBadRequest()
+        query = self.request.params['query']
+        matched_users = [x for x in self.context if query.upper() in x.upper()]
+        return matched_users

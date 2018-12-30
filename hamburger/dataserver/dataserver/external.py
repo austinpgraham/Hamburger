@@ -18,7 +18,8 @@ class AbstractExternal():
         for k in self.KEYS:
             if k not in self.EXCLUDE:
                 val = getattr(self, k)
-                if IExternalObject.providedBy(val) and request.has_permission("view", val):
+                if IExternalObject.providedBy(val) and request.has_permission("view", val)\
+                   and getattr(val, 'to_json', None) is not None:
                     result[k] = val.to_json(request)
                 else:
                     result[k] = val

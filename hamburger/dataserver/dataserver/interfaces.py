@@ -9,8 +9,13 @@ class IDataserver(interface.Interface):
     server application.
     """
 
+class IPermissionedObject(interface.Interface):
+    """
+    An object that provides an ACL to get user permissions.
+    """
 
-class IExternalObject(interface.Interface):
+
+class IExternalObject(IPermissionedObject):
     """
     A base external object.
     """

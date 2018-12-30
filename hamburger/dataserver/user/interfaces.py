@@ -1,7 +1,11 @@
 from zope import interface
 
 from zope.schema import Dict
+from zope.schema import List
 from zope.schema import Text
+from zope.schema import Object
+
+from hamburger.dataserver.dataserver.interfaces import IExternalObject
 
 
 class IUser(interface.Interface):
@@ -50,6 +54,13 @@ class IOAuthUser(IUser):
                         required=True)
 
 
+class IAuthedUser(IUser):
+    """
+    A user that has been authenitcated and fetched
+    via request.
+    """
+
+
 class IFacebookUser(IOAuthUser):
     """
     Interface representing a user logged in with Facebook
@@ -59,4 +70,11 @@ class IFacebookUser(IOAuthUser):
 class IGoogleUser(IOAuthUser):
     """
     Interface representing a user logged in with Google
+    """
+
+
+class IPermissionCollection(IExternalObject):
+    """
+    A collection of allowed permissions a user
+    has on a particular object.
     """

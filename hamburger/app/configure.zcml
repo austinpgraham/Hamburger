@@ -1,6 +1,8 @@
 <configure xmlns='http://namespaces.zope.org/zope'
            i18n_domain="zope">
 
+  <include package="hamburger.dataserver.user" />
+
   <include package="hamburger.app.user" />
   <include package="hamburger.app.product" />
 

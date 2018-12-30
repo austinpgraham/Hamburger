@@ -12,4 +12,8 @@
                 hamburger.dataserver.dataserver.interfaces.IPermissionedObject"
            factory="hamburger.dataserver.user.adapters.get_permission_collection" />
 
+  <adapter provides="hamburger.dataserver.user.interfaces.IAuthedUser"
+           for="pyramid.interfaces.IRequest"
+           factory="hamburger.dataserver.user.adapters._to_auth_user" />
+
 </configure>

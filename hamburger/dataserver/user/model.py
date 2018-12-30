@@ -11,6 +11,7 @@ from pyramid.security import Everyone
 from pyramid.security import Authenticated
 
 from hamburger.dataserver.user.interfaces import IUser
+from hamburger.dataserver.user.interfaces import IAuthedUser
 from hamburger.dataserver.user.interfaces import IGoogleUser
 from hamburger.dataserver.user.interfaces import IFacebookUser
 from hamburger.dataserver.user.interfaces import IUserCollection
@@ -79,10 +80,11 @@ class HamUser(Contained):
 
     def to_json(self, request):
         result = super(HamUser, self).to_json(request)
+        authed_user = IAuthedUser(request)
         lists = copy.deepcopy(self._lists)
         for _list in lists:
             _list = lists[_list]
-            permissions = component.queryMultiAdapter((self, _list), IPermissionCollection)
+            permissions = component.queryMultiAdapter((authed_user, _list), IPermissionCollection)
             _list.permissions = permissions
         result['wishlists'] = to_external_object(lists, request)
         return result
@@ -135,3 +137,8 @@ class HamUserCollection(Collection):
             raise TypeError("Cannot add non IUser to IUserCollection.")
         new_obj.password = get_hash(new_obj.password)
         return super(HamUserCollection, self).insert(new_obj, check_member)
+
+
+@interface.implementer(IAuthedUser)
+class HamAuthedUser(HamUser):
+    pass

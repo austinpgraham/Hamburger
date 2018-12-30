@@ -54,6 +54,13 @@ class IOAuthUser(IUser):
                         required=True)
 
 
+class IAuthedUser(IUser):
+    """
+    A user that has been authenitcated and fetched
+    via request.
+    """
+
+
 class IFacebookUser(IOAuthUser):
     """
     Interface representing a user logged in with Facebook

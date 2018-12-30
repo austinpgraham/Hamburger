@@ -67,6 +67,9 @@ class HamUser(Contained):
     def check_auth(self):
         return self
 
+    def is_empty(self):
+        return self.username is None
+
     def __getitem__(self, key):
         if key not in self._lists:
             raise KeyError("{} not in {}'s collection.".format(key, self.username))

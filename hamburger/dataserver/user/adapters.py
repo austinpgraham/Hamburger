@@ -13,6 +13,8 @@ from hamburger.dataserver.user.interfaces import IAuthedUser
 from hamburger.dataserver.user.interfaces import IUserCollection
 from hamburger.dataserver.user.interfaces import IPermissionCollection
 
+from hamburger.dataserver.user.model import HamAuthedUser
+
 
 @component.adapter(IUser, IPermissionedObject)
 @interface.implementer(IPermissionCollection)
@@ -30,6 +32,6 @@ def _to_auth_user(request):
         user = collection[auth_user]
         auth_user = user.check_auth()
     else:
-        auth_user = None
+        return HamAuthedUser()
     interface.directlyProvides(auth_user, IAuthedUser)
     return auth_user

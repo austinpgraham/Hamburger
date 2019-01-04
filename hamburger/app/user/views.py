@@ -22,6 +22,8 @@ from hamburger.app import AbstractAuthenticatedView
 from hamburger.dataserver.dataserver.interfaces import IDataserver
 from hamburger.dataserver.dataserver.interfaces import IOAuthSettings
 
+from hamburger.dataserver.dataserver.adapters import to_external_object
+
 from hamburger.dataserver.product.model import HamProductCollection
 
 from hamburger.dataserver.user.interfaces import IUser
@@ -162,5 +164,5 @@ class SearchUserView(AbstractAuthenticatedView):
         if "query" not in self.request.params:
             return HTTPBadRequest()
         query = self.request.params['query']
-        matched_users = [x for x in self.context if query.upper() in x.upper()]
+        matched_users = [to_external_object(self.context[x], self.request) for x in self.context if query.upper() in x.upper()]
         return matched_users

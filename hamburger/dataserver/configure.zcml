@@ -4,5 +4,6 @@
   <include package="hamburger.dataserver.dataserver" />
   <include package="hamburger.dataserver.user" />
   <include package="hamburger.dataserver.product" />
+  <include package="hamburger.dataserver.provider" />
   
 </configure>

@@ -4,7 +4,7 @@ class AbstractProvider():
         self.parser = parser
         self.fetcher = fetcher
 
-    def get_product(identifier):
+    def get_product(self, identifier):
         result = self.fetcher.fetch_product(identifier)
         if result is None:
             return None

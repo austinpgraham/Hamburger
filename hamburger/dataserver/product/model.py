@@ -25,22 +25,20 @@ class HamProduct(Contained):
     ]
 
     KEYS = [
-        "hamid",
-        "title",
-        "brand",
-        "price"
+        'title',
+        'price',
+        'itemURL',
+        'imageURL',
+        'hamid'
     ]
 
-    def _gen_id(self):
-        _hashstr = self.brand.replace(" ", "")+self.title.replace(" ", "")
-        return hash(_hashstr)
-
     def __init__(self, hamid=None, title=None,
-                 brand=None, price=None):
+                 itemURL=None, imageURL=None, price=None):
         self.title = title
-        self.brand = brand
         self.price = price
-        self.hamid = hamid if hamid is not None else self._gen_id()
+        self.itemURL = itemURL
+        self.imageURL = imageURL
+        self.hamid = hamid
 
 
 @interface.implementer(IProductCollection)
@@ -51,8 +49,7 @@ class HamProductCollection(Collection, Contained):
         "title",
         "is_public",
         "created_at",
-        "access_token",
-        "permissions"
+        "access_token"
     ]
 
     def _gen_token(self):

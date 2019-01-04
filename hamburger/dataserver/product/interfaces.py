@@ -24,9 +24,12 @@ class IProduct(interface.Interface):
     title = Text(title="Product Title",
                  required=True)
 
-    brand = Text(title="Product Brand",
-                 required=False,
-                 default=None)
+    imageURL = Text(title="URL to product image",
+                    required=False,
+                    default=None)
+
+    itemURL = Text(title="URL to product page",
+                   required=True)
 
     price = Float(title="Product Price",
                   required=True)
@@ -44,7 +47,7 @@ class IUserProductWishlist(ICollection):
 
     is_public = Bool(title="Privacy of this list",
                      required=True)
-    
+
     access_token = Text(title="Access token to share this wishlist",
                         required=True)
 

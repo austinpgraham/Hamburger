@@ -47,6 +47,6 @@ class EbayParser():
             'hamid': "ham-ebay-{}".format(item['itemId']),
             'imageURL': item['galleryURL'] if 'galleryURL' in item else None,
             'itemURL': item['viewItemURL'],
-            'price': item['sellingStatus']['currentPrice']['value']
+            'price': float(item['sellingStatus']['currentPrice']['value'])
         }
         return HamProduct(**product_args)

@@ -56,3 +56,22 @@ class IUserProductListCollection(ICollection):
     """
     Collection of product lists
     """
+
+
+class IDonationCollection(ICollection):
+    """
+    A collection of donations to be persistent.
+    """
+
+
+class IDonation(interface.Interface):
+    """
+    A marker interface for a user donation
+    to someone's wishlist.
+    """
+
+    userid = Text(title="User that donated.",
+                  required=True)
+    
+    amount = Float(title="Amount donated",
+                   required=True)

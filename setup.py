@@ -26,7 +26,8 @@ requires = [
     'waitress',
     'bcrypt',
     'psycopg2',
-    'relstorage'
+    'relstorage',
+    'ebaysdk'
     ]
 
 tests_require = [

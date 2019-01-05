@@ -71,16 +71,16 @@ class HamProduct(Contained):
         if key not in self._donations:
             raise KeyError("{} not in {}'s donation list.".format(key, self.hamid))
         return self._donations[key]
-    
+
     def __setitem__(self, key, obj):
         self._donations.insert(obj)
-    
+
     def __contains__(self, val):
         return val in self._donations
-    
+
     def __acl__(self):
         return []
-    
+
     def to_json(self, request):
         result = super(HamProduct, self).to_json(request)
         result['total_donations'] = self.total_donations

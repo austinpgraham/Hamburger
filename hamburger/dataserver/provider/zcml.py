@@ -34,7 +34,6 @@ class IRegisterProvider(interface.Interface):
 
 
 def registerProvider(_context, name, provider, fetcher, parser, **kwargs):
-    sm = component.getGlobalSiteManager()
     pfetcher = fetcher()
     if not IProductFetcher.providedBy(pfetcher):
         raise TypeError("Fetcher must provide IProductFetcher")

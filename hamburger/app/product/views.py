@@ -15,8 +15,13 @@ from hamburger.app.product import IDENTIFIER
 
 from hamburger.dataserver.dataserver.interfaces import IDataserver
 
+from hamburger.dataserver.product import USER_ID
+from hamburger.dataserver.product import AMOUNT
+
 from hamburger.dataserver.product.interfaces import IProduct
 from hamburger.dataserver.product.interfaces import IProductCollection
+
+from hamburger.dataserver.product.model import HamDonation
 
 from hamburger.dataserver.provider.interfaces import IProvider
 
@@ -57,3 +62,24 @@ class ProvidersGetView(AbstractAuthenticatedView):
             return HTTPForbidden()
         providers = component.getUtilitiesFor(IProvider)
         return [p[0] for p in providers]
+
+
+@view_config(context=IProduct,
+             request_method="POST")
+class DonateToView(AbstractAuthenticatedView):
+
+    def __call__(self):
+        if self.auth_user is None:
+            return HTTPForbidden()
+        if AMOUNT not in self.request.json:
+            return HTTPBadRequest()
+        user_id = self.auth_user.username
+        amount = float(self.request.json[AMOUNT])
+        donation = HamDonation(userid=user_id, amount=amount)
+        self.context[user_id] = donation
+        return HTTPOk()
+
+
+@view_config(context=IProduct)
+class GetProductView(AbstractResourceGetView):
+    pass

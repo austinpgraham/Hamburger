@@ -14,17 +14,17 @@ from hamburger.dataserver.product.model import HamProduct
 
 @interface.implementer(IEbayProvider)
 class EbayProvider(AbstractProvider):
-    pass
+    
+    def get_product(self, identifier):
+        self.fetcher.appID = self.appID
+        return super(EbayProvider, self).get_product(identifier)
 
 
 @interface.implementer(IProductFetcher)
 class EbayFetcher():
 
-    def __init__(self):
-        self.appID = "AustinGr-Hamburge-PRD-660b9b3c7-a4f8c441"
-        self.api = Connection(appid=self.appID, config_file=None)
-
     def fetch_product(self, identifier):
+        self.api = Connection(appid=self.appID, config_file=None)
         args = {
             'keywords': identifier
         }

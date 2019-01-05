@@ -1,5 +1,6 @@
 from zope import interface
 
+from zope.schema import Text
 from zope.schema import Object
 
 
@@ -50,3 +51,6 @@ class IEbayProvider(IProvider):
     """
     Marker of the Ebay provider class.
     """
+
+    appID = Text(title="Ebay Registered App ID",
+                 required=True)

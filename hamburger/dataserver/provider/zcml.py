@@ -27,9 +27,13 @@ class IRegisterProvider(interface.Interface):
 
     parser = GlobalObject(title="Product parser for this provider.",
                           required=True)
+    
+    appID = Text(title="Provider AppID",
+                 required=False,
+                 default=None)
 
 
-def registerProvider(_context, name, provider, fetcher, parser):
+def registerProvider(_context, name, provider, fetcher, parser, **kwargs):
     sm = component.getGlobalSiteManager()
     pfetcher = fetcher()
     if not IProductFetcher.providedBy(pfetcher):
@@ -37,6 +41,6 @@ def registerProvider(_context, name, provider, fetcher, parser):
     pparser = parser()
     if not IProductParser.providedBy(pparser):
         raise TypeError("Parser must provide IProductParser")
-    provider_factory = partial(provider, fetcher=pfetcher, parser=pparser)
+    provider_factory = partial(provider, fetcher=pfetcher, parser=pparser, **kwargs)
     component.zcml.utility(_context, provides=IProvider,
                            component=provider_factory, name=name)

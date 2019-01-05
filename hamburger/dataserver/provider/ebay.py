@@ -25,8 +25,10 @@ class EbayFetcher():
         self.api = Connection(appid=self.appID, config_file=None)
 
     def fetch_product(self, identifier):
-        arg = '<productId type="ReferenceID">{}</productId>'.format(int(identifier))
-        response = self.api.execute('findItemsByProduct', arg)
+        args = {
+            'keywords': identifier
+        }
+        response = self.api.execute('findItemsAdvanced', args)
         return response if response.reply.ack == "Success" else None
 
 

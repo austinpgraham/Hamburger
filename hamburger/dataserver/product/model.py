@@ -120,9 +120,9 @@ class HamProductCollection(Collection, Contained):
 
     def to_json(self, request):
         result = super(HamProductCollection, self).to_json(request)
-        permissions = getattr(self, "permissions", None)
+        permissions = getattr(self, 'permissions', None)
         if permissions is not None:
-            result["permissions"] = permissions
+            result['permissions'] = permissions
         result['created_at'] = str(result['created_at'])
         return result
 

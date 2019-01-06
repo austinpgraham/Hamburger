@@ -99,7 +99,8 @@ class HamProductCollection(Collection, Contained):
         "title",
         "is_public",
         "created_at",
-        "access_token"
+        "access_token",
+        "permissions"
     ]
 
     def _gen_token(self):

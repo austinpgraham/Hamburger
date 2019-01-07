@@ -1,2 +1,4 @@
 include *.txt *.ini *.cfg *.rst
-recursive-include hamburger *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml
+recursive-include hamburger *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml *.zcml
+include README.md
+include LICENSE.txt

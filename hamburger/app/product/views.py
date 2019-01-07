@@ -4,6 +4,7 @@ from pyramid.httpexceptions import HTTPOk
 from pyramid.httpexceptions import HTTPConflict
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPBadRequest
+from pyramid.httpexceptions import exception_response
 
 from zope import component
 
@@ -50,7 +51,9 @@ class ProductPostView(AbstractAuthenticatedView):
         product = provider.get_product(identifier)
         if product is None:
             return HTTPBadRequest("Product '{}' could not be parsed.".format(identifier))
-        return HTTPOk() if self.context.insert(product) else HTTPConflict()
+        if not self.context.insert(product):
+            raise exception_response(409)
+        return HTTPOk()
 
 
 @view_config(context=IDataserver,

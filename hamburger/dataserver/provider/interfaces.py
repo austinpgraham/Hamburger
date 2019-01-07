@@ -54,3 +54,11 @@ class IEbayProvider(IProvider):
 
     appID = Text(title="Ebay Registered App ID",
                  required=True)
+
+
+class IStripePayment(interface.Interface):
+    """
+    Marker interface for stripe payment
+    """
+    sk = Text(title="Secret Key",
+              required=True)

@@ -27,7 +27,8 @@ requires = [
     'bcrypt',
     'psycopg2',
     'relstorage',
-    'ebaysdk'
+    'ebaysdk',
+    'stripe'
     ]
 
 tests_require = [

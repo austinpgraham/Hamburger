@@ -16,6 +16,10 @@ from hamburger.dataserver import appmaker
 
 from hamburger.dataserver.dataserver.interfaces import IOAuthSettings
 
+from hamburger.dataserver.provider.interfaces import IStripePayment
+
+from hamburger.dataserver.provider.stripe import StripePayment
+
 from hamburger.app.cors import CorsPreflightPredicate
 from hamburger.app.cors import add_cors_to_response
 
@@ -36,6 +40,7 @@ def cors_options_view(context, request):
     request.response.headers['Access-Control-Max-Age'] = '3600'
 
     return response
+
 
 def root_factory(request):
     conn = get_connection(request)
@@ -89,6 +94,10 @@ def main(global_config, **settings):
     oauth = configure_oauth(settings)
     sm = getGlobalSiteManager()
     sm.registerUtility(oauth, IOAuthSettings)
+
+    # Configure stripe
+    sp = StripePayment(settings['stripe.sk'])
+    sm.registerUtility(sp, IStripePayment)
 
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)

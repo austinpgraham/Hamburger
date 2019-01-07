@@ -1,3 +1,5 @@
+import json
+
 from pyramid.view import view_defaults
 
 from pyramid.httpexceptions import HTTPOk
@@ -36,7 +38,7 @@ class AbstractResourceGetView(AbstractAuthenticatedView):
 
     def __call__(self):
         obj = to_external_object(self.context, self.request)
-        return obj
+        return exception_response(200, body=json.dumps(obj))
 
 
 @view_defaults(name="edit",

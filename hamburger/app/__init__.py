@@ -53,7 +53,6 @@ class AbstractEditObjectView(AbstractAuthenticatedView):
         result = self.context.update_from_external(new_obj, self.request)
         if result is not None:
             raise exception_response(422, body=str({'error': result}))
-        from pdb import set_trace; set_trace()
         if key is not None and ICollection.providedBy(self.context.__parent__):
             parent = self.context.__parent__
             parent.pop(key)

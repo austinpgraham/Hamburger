@@ -12,6 +12,7 @@ from pyramid.httpexceptions import HTTPCreated
 from pyramid.httpexceptions import HTTPConflict
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPBadRequest
+from pyramid.httpexceptions import exception_response
 
 from zope import component
 
@@ -22,6 +23,7 @@ from hamburger.app import AbstractAuthenticatedView
 
 from hamburger.dataserver.dataserver.interfaces import IDataserver
 from hamburger.dataserver.dataserver.interfaces import IOAuthSettings
+from hamburger.dataserver.dataserver.interfaces import IRedundancyCheck
 
 from hamburger.dataserver.dataserver.adapters import to_external_object
 
@@ -42,8 +44,10 @@ class CreateUserView(AbstractView):
         new_user = IUser(self.request)
         if not new_user.is_complete():
             return HTTPBadRequest()
-        if not self.context.insert(new_user, check_member=True):
-            return HTTPConflict()
+        checks = component.subscribers((new_user,), IRedundancyCheck)
+        if any([check.check(new_user, self.request) for check in checks]) or\
+           not self.context.insert(new_user, check_member=True):
+            return exception_response(409)
         return HTTPCreated()
 
 

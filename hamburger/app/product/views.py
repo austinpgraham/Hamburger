@@ -7,6 +7,7 @@ from pyramid.httpexceptions import HTTPBadRequest
 
 from zope import component
 
+from hamburger.app import AbstractEditObjectView
 from hamburger.app import AbstractResourceGetView
 from hamburger.app import AbstractAuthenticatedView
 
@@ -20,6 +21,7 @@ from hamburger.dataserver.product import AMOUNT
 
 from hamburger.dataserver.product.interfaces import IProduct
 from hamburger.dataserver.product.interfaces import IProductCollection
+from hamburger.dataserver.product.interfaces import IUserProductListCollection
 
 from hamburger.dataserver.product.model import HamDonation
 
@@ -82,4 +84,9 @@ class DonateToView(AbstractAuthenticatedView):
 
 @view_config(context=IProduct)
 class GetProductView(AbstractResourceGetView):
+    pass
+
+
+@view_config(context=IProductCollection)
+class EditProductCollectionView(AbstractEditObjectView):
     pass

@@ -84,6 +84,9 @@ class HamUser(Contained):
     def to_json(self, request):
         result = super(HamUser, self).to_json(request)
         authed_user = IAuthedUser(request)
+        # This is causing write conflicts in ZODB.
+        # Should be first on the list to fix along with handles
+        # on ZODB write conflicts themselves.
         lists = copy.deepcopy(self._lists)
         for _list in lists:
             _list = lists[_list]
@@ -92,6 +95,7 @@ class HamUser(Contained):
         result['wishlists'] = to_external_object(lists, request)
         return result
 
+    @property
     def __acl__(self):
         return [
             (Allow, Authenticated, "view"),

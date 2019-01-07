@@ -2,9 +2,11 @@ from persistent import Persistent
 
 from persistent.mapping import PersistentMapping
 
+from zope import component
 from zope import interface
 
 from hamburger.dataserver.dataserver.interfaces import IExternalObject
+from hamburger.dataserver.dataserver.interfaces import IRedundancyCheck
 from hamburger.dataserver.dataserver.interfaces import IExternalPersistent
 
 
@@ -27,6 +29,26 @@ class AbstractExternal():
 
     def is_complete(self):
         return all([getattr(self, x, None) for x in self.KEYS])
+
+    def update_from_external(self, obj, request):
+        if not isinstance(obj, dict):
+            raise ValueError("Cannot update from non-dictionary")
+        for key, value in obj.items():
+            if hasattr(self, key):
+                try:
+                    setattr(self, key, value)
+                except:
+                    # If an error on update occurs,
+                    # return the key of the object where it occured.
+                    return key
+            checks = component.subscribers((self,), IRedundancyCheck)
+            for check in checks:
+                # I don't think we need to pass self here...
+                if check.check(self, request):
+                    return check.ATTR
+            # Mark this object as changed in ZODB.
+            self._p_changed = True
+        return None
 
     @classmethod
     def from_json(cls, json):

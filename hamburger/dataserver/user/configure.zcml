@@ -6,6 +6,14 @@
   <subscriber provides="hamburger.dataserver.user.interfaces.IUserCollection"
               for="pyramid.interfaces.IRequest"
               factory="hamburger.dataserver.user.subscribers._get_user_collection" />
+
+  <subscriber provides="hamburger.dataserver.dataserver.interfaces.IRedundancyCheck"
+              for="hamburger.dataserver.user.interfaces.IUser"
+              factory="hamburger.dataserver.user.subscribers.CheckEmail" />
+
+  <subscriber provides="hamburger.dataserver.dataserver.interfaces.IRedundancyCheck"
+              for="hamburger.dataserver.user.interfaces.IUser"
+              factory="hamburger.dataserver.user.subscribers.CheckUsername" />
   
   <adapter provides="hamburger.dataserver.user.interfaces.IPermissionCollection"
            for="hamburger.dataserver.user.interfaces.IUser

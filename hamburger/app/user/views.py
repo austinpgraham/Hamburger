@@ -16,6 +16,7 @@ from pyramid.httpexceptions import HTTPBadRequest
 from zope import component
 
 from hamburger.app import AbstractView
+from hamburger.app import AbstractEditObjectView
 from hamburger.app import AbstractResourceGetView
 from hamburger.app import AbstractAuthenticatedView
 
@@ -166,3 +167,8 @@ class SearchUserView(AbstractAuthenticatedView):
         query = self.request.params['query']
         matched_users = [to_external_object(self.context[x], self.request) for x in self.context if query.upper() in x.upper()]
         return matched_users
+
+
+@view_config(context=IUser)
+class EditUserView(AbstractEditObjectView):
+    pass

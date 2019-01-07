@@ -83,3 +83,15 @@ class IOAuthSettings(interface.Interface):
     """
     Interace for oauth settings access
     """
+
+
+class IRedundancyCheck(interface.Interface):
+    """
+    implements a series of redundancy checks for
+    a particular object
+    """
+
+    def check(obj, request):
+        """
+        Check redundancy against this object.
+        """

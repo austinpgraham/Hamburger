@@ -22,7 +22,7 @@ class AbstractExternal():
                 val = getattr(self, k)
                 if IExternalObject.providedBy(val) and request.has_permission("view", val)\
                    and getattr(val, 'to_json', None) is not None:
-                    result[k] = val.to_json(request)
+                    result[k] = val.to_json(request) # pragma: no cover
                 else:
                     result[k] = val
         return result
@@ -31,7 +31,7 @@ class AbstractExternal():
         return all([getattr(self, x, None) for x in self.KEYS])
 
     def update_from_external(self, obj, request):
-        if not isinstance(obj, dict):
+        if not isinstance(obj, dict): # pragma: no cover
             raise ValueError("Cannot update from non-dictionary")
         for key, value in obj.items():
             if hasattr(self, key):
@@ -44,7 +44,7 @@ class AbstractExternal():
             checks = component.subscribers((self,), IRedundancyCheck)
             for check in checks:
                 # I don't think we need to pass self here...
-                if check.check(self, request):
+                if check.check(self, request): # pragma: no cover
                     return check.ATTR
             # Mark this object as changed in ZODB.
             self._p_changed = True
@@ -52,7 +52,7 @@ class AbstractExternal():
 
     @classmethod
     def from_json(cls, json):
-        if any([key not in cls.KEYS for key in json.keys()]):
+        if any([key not in cls.KEYS for key in json.keys()]): # pragma: no cover
             return None
         return cls(**json)
 

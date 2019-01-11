@@ -24,7 +24,7 @@ from hamburger.app.cors import CorsPreflightPredicate
 from hamburger.app.cors import add_cors_to_response
 
 
-def cors_options_view(context, request):
+def cors_options_view(context, request): # pragma: no cover
     response = request.response
     if 'Access-Control-Request-Headers' in request.headers:
         response.headers['Access-Control-Allow-Methods'] = ', '.join({
@@ -42,12 +42,12 @@ def cors_options_view(context, request):
     return response
 
 
-def root_factory(request):
+def root_factory(request): # pragma: no cover
     conn = get_connection(request)
     return appmaker(conn.root())
 
 
-def configure_oauth(settings):
+def configure_oauth(settings): # pragma: no cover
     CONFIG = {
         'fb': {
             'class_': oauth2.Facebook,
@@ -66,7 +66,7 @@ def configure_oauth(settings):
     return authomatic
 
 
-def main(global_config, **settings):
+def main(global_config, **settings): # pragma: no cover
     """ This function returns a Pyramid WSGI application.
     """
     config = Configurator(settings=settings)

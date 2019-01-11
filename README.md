@@ -18,5 +18,11 @@ the repository for security reasons as it contains keys for various server servi
 By default, Pyramid does not log interactions within the server except for errors.
 If new code is written, you must exit and restart the server.
 
+## Running Tests
+Test are run with pytest.
+
+`pytest --cov-report term-missing --cov=hamburger`
+
+
 ### Notes
 If any changes are to be made, please submit a Pull Request and ask Austin Graham for review.

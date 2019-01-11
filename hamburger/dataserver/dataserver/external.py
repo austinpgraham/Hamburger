@@ -37,7 +37,7 @@ class AbstractExternal():
             if hasattr(self, key):
                 try:
                     setattr(self, key, value)
-                except:
+                except: # pragma: no cover
                     # If an error on update occurs,
                     # return the key of the object where it occured.
                     return key

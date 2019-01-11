@@ -11,6 +11,11 @@ from hamburger.dataserver.dataserver.interfaces import IExternalPersistent
 
 
 class AbstractExternal():
+    """
+    This is the base external class.
+    Provides basic iteration through objects to convert
+    them to JSON objects.
+    """
 
     KEYS = []
     EXCLUDE = []
@@ -59,15 +64,23 @@ class AbstractExternal():
 
 @interface.implementer(IExternalPersistent)
 class ExternalPersistent(Persistent, AbstractExternal):
-    pass
+    """
+    External object that is not a container
+    """
 
 
 @interface.implementer(IExternalPersistent)
 class ExternalPersistentMapping(PersistentMapping, AbstractExternal):
+    """
+    External dictionary, usually containers
+    """
 
     def to_json(self, request):
         result = super(ExternalPersistentMapping, self).to_json(request)
         result['items'] = items = {}
+        # For every key, check that the value is external
+        # and the current user has permission before adding
+        # to the result object
         for key in self:
             obj = self[key]
             if IExternalObject.providedBy(obj) and request.has_permission("view", context=obj):

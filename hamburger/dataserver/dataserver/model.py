@@ -11,7 +11,7 @@ from hamburger.dataserver.dataserver.external import ExternalPersistent
 
 
 @interface.implementer(IDataserver)
-class Dataserver(PersistentMapping):
+class Dataserver(PersistentMapping): # pragma: no cover
     __parent__ = __name__ = None
 
 
@@ -19,12 +19,13 @@ class Dataserver(PersistentMapping):
 class Collection(ExternalPersistentMapping):
 
     def insert(self, new_obj, check_member=False, update_on_found=True):
-        if not IContained.providedBy(new_obj):
+        if not IContained.providedBy(new_obj): # pragma: no cover
             raise TypeError("new_obj must implement IContained.")
         key = new_obj.get_key()
         if check_member and key in self:
             if update_on_found:
                 self.update(new_obj)
+                return True
             return False
         new_obj.__name__ = new_obj.get_key()
         new_obj.__parent__ = self

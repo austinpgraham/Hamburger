@@ -7,6 +7,9 @@ from hamburger.dataserver.dataserver.tests import DataserverTestBase
 from hamburger.dataserver.dataserver.model import Contained
 from hamburger.dataserver.dataserver.model import Collection
 
+from hamburger.dataserver.dataserver.security import get_hash
+from hamburger.dataserver.dataserver.security import check_hash
+
 
 class FakeContained(Contained):
     __key__ = 'test'
@@ -32,3 +35,9 @@ class TestModel(DataserverTestBase):
         first_obj.new_val = 'new_val'
         assert_that(mycoll.insert(first_obj, check_member=True), is_(True))
         assert_that(mycoll[7], has_property('new_val'))
+
+    def test_security(self):
+        # Test the BCrypt libraries
+        test_string = "test"
+        _hash = get_hash("test")
+        assert_that(check_hash("test", _hash), is_(True))

@@ -17,8 +17,8 @@ from hamburger.app.product import IDENTIFIER
 
 from hamburger.dataserver.dataserver.interfaces import IDataserver
 
-from hamburger.dataserver.product import USER_ID
 from hamburger.dataserver.product import AMOUNT
+from hamburger.dataserver.product import USER_ID
 
 from hamburger.dataserver.product.interfaces import IProduct
 from hamburger.dataserver.product.interfaces import IProductCollection
@@ -27,6 +27,7 @@ from hamburger.dataserver.product.interfaces import IUserProductListCollection
 from hamburger.dataserver.product.model import HamDonation
 
 from hamburger.dataserver.provider.interfaces import IProvider
+from hamburger.dataserver.provider.interfaces import IStripePayment
 
 
 @view_config(context=IProductCollection)
@@ -69,19 +70,42 @@ class ProvidersGetView(AbstractAuthenticatedView):
         return [p[0] for p in providers]
 
 
+TOKEN = "token"
+
+
+def _charge(donation, email):
+    sp = component.getUtility(IStripePayment)
+    return sp.charge(
+        donation.token,
+        donation.amount,
+        "Donation to {}".format(donation.__parent__),
+        email
+    )
+
+
 @view_config(context=IProduct,
              request_method="POST")
 class DonateToView(AbstractAuthenticatedView):
 
     def __call__(self):
-        if self.auth_user is None:
-            return HTTPForbidden()
-        if AMOUNT not in self.request.json:
+        # Check request body
+        if AMOUNT not in self.request.json or\
+           TOKEN not in self.request.json: # pragma: no cover
             return HTTPBadRequest()
+        # Get info to pass to donations
         user_id = self.auth_user.username
         amount = float(self.request.json[AMOUNT])
-        donation = HamDonation(userid=user_id, amount=amount)
+        # Adjust the amount to be the remaining for the product
+        if amount > self.context.total_donations:
+            amount = int(round(self.context.price - self.context.total_donations))
+        token = self.request.json[TOKEN]
+        # Save the donation
+        donation = HamDonation(userid=user_id, amount=amount, token=token)
         self.context[user_id] = donation
+        # Charge the user
+        result = _charge(donation, self.auth_user.email)
+        if result.failure_code is not None: # pragma: no cover
+            return exception_response(422, body={'error': 'Could not charge.'})
         return HTTPOk()
 
 

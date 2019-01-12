@@ -62,3 +62,13 @@ class IStripePayment(interface.Interface):
     """
     sk = Text(title="Secret Key",
               required=True)
+
+    def charge(token, amount, description, email):
+        """
+        Charge the given amount for the transaction
+        """
+
+    def refund(token, partial=None):
+        """
+        Refund the given charge amount.
+        """

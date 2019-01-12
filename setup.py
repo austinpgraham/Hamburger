@@ -28,7 +28,8 @@ requires = [
     'psycopg2',
     'relstorage',
     'ebaysdk',
-    'stripe'
+    'stripe',
+    'pyhamcrest'
     ]
 
 tests_require = [

@@ -72,6 +72,9 @@ class IDonation(interface.Interface):
 
     userid = Text(title="User that donated.",
                   required=True)
-    
+
     amount = Float(title="Amount donated",
                    required=True)
+
+    token = Text(title="Charge token",
+                 required=True)

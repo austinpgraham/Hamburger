@@ -38,9 +38,10 @@ class HamDonation(Contained):
     # TODO" Is this externalizable?
     KEYS = []
 
-    def __init__(self, userid=None, amount=None):
+    def __init__(self, userid=None, amount=None, token=None):
         self.userid = userid
         self.amount = amount
+        self.token = token
 
 
 @interface.implementer(IProduct)

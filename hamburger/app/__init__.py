@@ -37,8 +37,7 @@ class AbstractAuthenticatedView(AbstractView):
 class AbstractResourceGetView(AbstractAuthenticatedView):
 
     def __call__(self):
-        obj = to_external_object(self.context, self.request)
-        return exception_response(200, body=json.dumps(obj))
+        return to_external_object(self.context, self.request)
 
 
 @view_defaults(name="edit",

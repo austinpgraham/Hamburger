@@ -1,4 +1,7 @@
+import os
 import time
+import uuid
+import shutil
 
 from authomatic.adapters import WebObAdapter
 
@@ -26,6 +29,8 @@ from hamburger.dataserver.dataserver.interfaces import IOAuthSettings
 from hamburger.dataserver.dataserver.interfaces import IRedundancyCheck
 
 from hamburger.dataserver.dataserver.adapters import to_external_object
+
+from hamburger.dataserver.dataserver.security import get_hash
 
 from hamburger.dataserver.product.model import HamProductCollection
 
@@ -164,8 +169,6 @@ class VerifyAuthView(AbstractAuthenticatedView):
 class SearchUserView(AbstractAuthenticatedView):
 
     def __call__(self):
-        if self.auth_user is None:
-            return HTTPForbidden()
         if "query" not in self.request.params:
             return HTTPBadRequest()
         query = self.request.params['query']
@@ -176,3 +179,36 @@ class SearchUserView(AbstractAuthenticatedView):
 @view_config(context=IUser)
 class EditUserView(AbstractEditObjectView):
     pass
+
+
+@view_config(context=IUser,
+             name="avatar",
+             request_method="POST",
+             permission="edit")
+class UploadProfilePicView(AbstractAuthenticatedView):
+
+    def __call__(self):
+        if "file" not in self.request.POST:
+            return HTTPBadRequest()
+        store_path = self.request.registry.settings['profile.store']
+        obj = self.request.POST["file"]
+        # This will definitely need to be handled for IE, also
+        # there needs to be talk of how to better store profile pictures
+        # on the future NFS system.
+        #
+        # NOTE: Research this.
+        filename = obj.filename
+        _file = obj.file
+        _hashed = str(get_hash(self.context.username))
+        user_dir_path = os.path.join(store_path, _hashed)
+        if not os.path.isdir(user_dir_path):
+            os.makedirs(user_dir_path)
+        full_path = os.path.join(user_dir_path, '{}.png'.format(uuid.uuid4()))
+        # Write a temporary file in case of errors
+        temp_path = full_path + "~"
+        _file.seek(0)
+        with open(temp_path, 'wb') as _out:
+            shutil.copyfileobj(_file, _out)
+        os.rename(temp_path, full_path)
+        self.context.profile_pic = full_path
+        return HTTPOk()

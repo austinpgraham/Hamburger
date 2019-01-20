@@ -25,6 +25,7 @@ class AppTestBase(unittest.TestCase):
         config.read(os.path.join(CONFIG_PATH, "testing.ini"))
         settings = dict(config['app:main'])
         settings['zodbconn.uri'] = uri
+        settings['profile.store'] = self._tmpdir
         app = main({}, **settings)
         self.db = app.registry._zodb_databases['']
         from webtest import TestApp

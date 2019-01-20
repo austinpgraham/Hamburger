@@ -24,6 +24,9 @@ class AbstractUserCheck():
         objs = [getattr(user_collection[u], self.ATTR) for u in user_collection if u != obj.username]
         return getattr(obj, self.ATTR) in objs
 
+# Each of these checks is tested in the app layer
+# via the various user creation calls.
+
 
 class CheckEmail(AbstractUserCheck):
     ATTR = "email"

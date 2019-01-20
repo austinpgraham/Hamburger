@@ -19,6 +19,8 @@ from hamburger.dataserver.user.interfaces import IPermissionCollection
 
 from hamburger.dataserver.product.model import HamUserProductListCollection
 
+from hamburger.dataserver.dataserver.interfaces import IRedundancyCheck
+
 from hamburger.dataserver.dataserver.adapters import to_external_object
 
 from hamburger.dataserver.dataserver.model import Contained
@@ -111,10 +113,10 @@ class _OAuthUser(HamUser):
         super(_OAuthUser, self).__init__(**kwargs)
         self.username = self.email
 
-    def authenticate(self, request):
+    def authenticate(self, request): # pragma: no cover
         return remember(request, self.username)
 
-    def deauthenticate(self, request):
+    def deauthenticate(self, request): # pragma: no cover
         self.access_token = None
         return forget(request)
 
@@ -141,7 +143,7 @@ class HamUserCollection(Collection):
 
     def insert(self, new_obj, check_member=False):
         if not IUser.providedBy(new_obj):
-            raise TypeError("Cannot add non IUser to IUserCollection.")
+            raise TypeError("Cannot add non IUser to IUserCollection.") # pragma: no cover
         new_obj.password = get_hash(new_obj.password)
         return super(HamUserCollection, self).insert(new_obj, check_member)
 

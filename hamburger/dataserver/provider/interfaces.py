@@ -41,7 +41,7 @@ class IProvider(interface.Interface):
                     title="Product Parser",
                     required=True)
 
-    def get_product(identifier):
+    def get_product(identifier, appID):
         """
         Returns an IProduct from a given identifier.
         """
@@ -51,9 +51,6 @@ class IEbayProvider(IProvider):
     """
     Marker of the Ebay provider class.
     """
-
-    appID = Text(title="Ebay Registered App ID",
-                 required=True)
 
 
 class IStripePayment(interface.Interface):

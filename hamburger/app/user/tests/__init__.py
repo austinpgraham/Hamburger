@@ -27,14 +27,14 @@ NON_AUTHED_USER = {
 }
 
 
-class ProductAppTestBase(AppTestBase):
+class UserAppTestBase(AppTestBase):
 
     ZCML = os.path.join(os.path.dirname(__file__), "..", "..", "configure.zcml")
 
     def setUp(self):
-        super(ProductAppTestBase, self).setUp()
+        super(UserAppTestBase, self).setUp()
         xmlconfig.file(self.ZCML)
         self.setup_autheduser(**AUTHED_USER)
 
     def tearDown(self):
-        super(ProductAppTestBase, self).tearDown()
+        super(UserAppTestBase, self).tearDown()

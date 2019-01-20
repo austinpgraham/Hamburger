@@ -15,8 +15,8 @@ from hamburger.dataserver.product.model import HamProduct
 @interface.implementer(IEbayProvider)
 class EbayProvider(AbstractProvider):
 
-    def get_product(self, identifier):
-        self.fetcher.appID = self.appID
+    def get_product(self, identifier, appID):
+        self.fetcher.appID = appID
         return super(EbayProvider, self).get_product(identifier)
 
 

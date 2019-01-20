@@ -33,7 +33,7 @@ class AbstractExternal():
         return result
 
     def is_complete(self):
-        return all([getattr(self, x, None) for x in self.KEYS])
+        return all([getattr(self, x, None) is not None for x in self.KEYS])
 
     def update_from_external(self, obj, request):
         if not isinstance(obj, dict): # pragma: no cover

@@ -3,10 +3,17 @@ import json
 import shutil
 import tempfile
 import unittest
+import configparser
 
 from pyramid import testing
 
+from pyramid.compat import configparser
+
 from hamburger import main
+
+
+# Path to testing.ini
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..", "conf")
 
 
 class AppTestBase(unittest.TestCase):
@@ -15,16 +22,10 @@ class AppTestBase(unittest.TestCase):
         self._tmpdir = tempfile.mkdtemp()
         dbpath = os.path.join(self._tmpdir, 'test.db')
         uri = "file://" + dbpath
-        settings = {
-            'zodbconn.uri': uri,
-            'pyramid.includes': ['pyramid_zodbconn', 'pyramid_tm'],
-            'tutorial.secret': '98zd',
-            'stripe.sk': 'sk_test_P413BkDG2R07lTOp5ERdyfli',
-            'facebook.key': '361607684642526',
-            'facebook.secret': '211bfd1b6b7140120a48a2bcafce4c05',
-            'google.key': '227100062245-9mlhjnur45073ktn8apgu38geus4bhop.apps.googleusercontent.com',
-            'google.secret': 'CVdnXvybSWRqshkCeb-6kPwC'
-        }
+        config = configparser.ConfigParser()
+        config.read(os.path.join(CONFIG_PATH, "testing.ini"))
+        settings = dict(config['app:main'])
+        settings['zodbconn.uri'] = uri
         app = main({}, **settings)
         self.db = app.registry._zodb_databases['']
         from webtest import TestApp

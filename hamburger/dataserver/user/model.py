@@ -59,10 +59,10 @@ class HamUser(Contained):
     def authenticate(self, password, request):
         if check_hash(password, self.password):
             return remember(request, self.get_key())
-        return None
+        return None # pragma: no cover
 
     def deauthenticate(self, request):
-        return forget(request)
+        return forget(request) # pragma: no cover
 
     def check_auth(self):
         return self
@@ -81,9 +81,9 @@ class HamUser(Contained):
     def __contains__(self, val):
         return val in self._lists
 
-    def to_json(self, request):
+    def to_json(self, request, authed_user=None):
         result = super(HamUser, self).to_json(request)
-        authed_user = IAuthedUser(request)
+        authed_user = authed_user if authed_user is not None else IAuthedUser(request)
         # This is causing write conflicts in ZODB.
         # Should be first on the list to fix along with handles
         # on ZODB write conflicts themselves.

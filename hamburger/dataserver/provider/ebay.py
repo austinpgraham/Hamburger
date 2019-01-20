@@ -38,7 +38,7 @@ class EbayParser():
     def parse_product(self, obj):
         items = obj.dict()['searchResult']['item']
         if len(items) <= 0:
-            return None
+            return None # pragma: no cover
         # Find item with minimum price
         sorted_items = sorted(items, key=lambda item: item['sellingStatus']['currentPrice']['value'], reverse=True)
         item = sorted_items.pop()

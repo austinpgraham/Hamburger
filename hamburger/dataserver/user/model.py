@@ -19,6 +19,8 @@ from hamburger.dataserver.user.interfaces import IPermissionCollection
 
 from hamburger.dataserver.product.model import HamUserProductListCollection
 
+from hamburger.dataserver.dataserver.interfaces import IRedundancyCheck
+
 from hamburger.dataserver.dataserver.adapters import to_external_object
 
 from hamburger.dataserver.dataserver.model import Contained
@@ -59,10 +61,10 @@ class HamUser(Contained):
     def authenticate(self, password, request):
         if check_hash(password, self.password):
             return remember(request, self.get_key())
-        return None
+        return None # pragma: no cover
 
     def deauthenticate(self, request):
-        return forget(request)
+        return forget(request) # pragma: no cover
 
     def check_auth(self):
         return self
@@ -81,9 +83,9 @@ class HamUser(Contained):
     def __contains__(self, val):
         return val in self._lists
 
-    def to_json(self, request):
+    def to_json(self, request, authed_user=None):
         result = super(HamUser, self).to_json(request)
-        authed_user = IAuthedUser(request)
+        authed_user = authed_user if authed_user is not None else IAuthedUser(request)
         # This is causing write conflicts in ZODB.
         # Should be first on the list to fix along with handles
         # on ZODB write conflicts themselves.
@@ -111,10 +113,10 @@ class _OAuthUser(HamUser):
         super(_OAuthUser, self).__init__(**kwargs)
         self.username = self.email
 
-    def authenticate(self, request):
+    def authenticate(self, request): # pragma: no cover
         return remember(request, self.username)
 
-    def deauthenticate(self, request):
+    def deauthenticate(self, request): # pragma: no cover
         self.access_token = None
         return forget(request)
 
@@ -141,7 +143,7 @@ class HamUserCollection(Collection):
 
     def insert(self, new_obj, check_member=False):
         if not IUser.providedBy(new_obj):
-            raise TypeError("Cannot add non IUser to IUserCollection.")
+            raise TypeError("Cannot add non IUser to IUserCollection.") # pragma: no cover
         new_obj.password = get_hash(new_obj.password)
         return super(HamUserCollection, self).insert(new_obj, check_member)
 

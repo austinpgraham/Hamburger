@@ -9,5 +9,5 @@ class AbstractProvider():
     def get_product(self, identifier):
         result = self.fetcher.fetch_product(identifier)
         if result is None:
-            return None
+            return None # pragma: no cover
         return self.parser.parse_product(result)

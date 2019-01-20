@@ -26,12 +26,19 @@ def get_permission_collection(user, context):
 @component.adapter(IRequest)
 @interface.implementer(IAuthedUser)
 def _to_auth_user(request):
+    """
+    Converts an authenticated user to a masked 
+    AuthUser class. 
+
+    NOTE: This adapter is tested in the app layer via
+    the many authentication-required views.
+    """
     auth_user = request.authenticated_userid
     collection = component.subscribers((request,), IUserCollection).pop()
-    if auth_user in collection:
+    if auth_user in collection.keys():
         user = collection[auth_user]
         auth_user = user.check_auth()
     else:
-        return HamAuthedUser()
+        return HamAuthedUser() # pragma: no cover
     interface.directlyProvides(auth_user, IAuthedUser)
     return auth_user

@@ -27,7 +27,7 @@ class IRegisterProvider(interface.Interface):
 
     parser = GlobalObject(title="Product parser for this provider.",
                           required=True)
-    
+
     appID = Text(title="Provider AppID",
                  required=False,
                  default=None)
@@ -36,10 +36,10 @@ class IRegisterProvider(interface.Interface):
 def registerProvider(_context, name, provider, fetcher, parser, **kwargs):
     pfetcher = fetcher()
     if not IProductFetcher.providedBy(pfetcher):
-        raise TypeError("Fetcher must provide IProductFetcher")
+        raise TypeError("Fetcher must provide IProductFetcher") # pragma: no cover
     pparser = parser()
     if not IProductParser.providedBy(pparser):
-        raise TypeError("Parser must provide IProductParser")
+        raise TypeError("Parser must provide IProductParser") # pragma: no cover
     provider_factory = partial(provider, fetcher=pfetcher, parser=pparser, **kwargs)
     component.zcml.utility(_context, provides=IProvider,
                            component=provider_factory, name=name)

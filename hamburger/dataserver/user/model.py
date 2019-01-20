@@ -41,6 +41,8 @@ class HamUser(Contained):
         'last_name',
         'email',
         'password',
+        'profile_pic',
+        'phone_number'
     ]
 
     EXCLUDE = [
@@ -49,12 +51,15 @@ class HamUser(Contained):
 
     def __init__(self, username=None, first_name=None,
                  last_name=None, email=None,
-                 password=None):
+                 password=None, phone_number=None,
+                 profile_pic=""):
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.password = password
+        self.phone_number = phone_number
+        self.profile_pic = profile_pic
         self._lists = HamUserProductListCollection()
         self._lists.__parent__ = self
 

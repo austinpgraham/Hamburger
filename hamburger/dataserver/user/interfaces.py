@@ -23,6 +23,11 @@ class IUser(interface.Interface):
                  required=True)
     password = Text(title="User password",
                     required=True)
+    phone_number = Text(title="User Phone Number",
+                        required=True)
+    profile_pic = Text(title="Path to Profile Pic",
+                       required=False,
+                       default="")
 
     def authenticate(user, request):
         """

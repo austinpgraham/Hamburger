@@ -12,14 +12,18 @@ AUTHED_USER = {
     "password": "password",
     "first_name": "Austin",
     "last_name": "Graham",
-    "email": "test@email.com"
+    "email": "test@email.com",
+    "phone_number": "test",
+    "profile_pic": ""
 }
 NON_AUTHED_USER = {
     'username': "austinp",
     'password': 'password',
     'first_name': "Test",
     "last_name": "User",
-    "email": "test@email.com"
+    "email": "test@email.com",
+    "phone_number": "test",
+    "profile_pic": ""
 }
 
 

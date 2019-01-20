@@ -3,7 +3,6 @@ import json
 import shutil
 import tempfile
 import unittest
-import configparser
 
 from pyramid import testing
 

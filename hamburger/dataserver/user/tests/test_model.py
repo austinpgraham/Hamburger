@@ -25,7 +25,8 @@ class TestUserModel(UserTestBase):
             first_name="Austin",
             last_name="Graham",
             email="austingraham731@gmail.com",
-            password="password"
+            password="password",
+            phone_number="number"
         )
         # Create a fake collection
         pc = HamProductCollection(
@@ -63,7 +64,8 @@ class TestUserModel(UserTestBase):
             first_name="Austin",
             last_name="Graham",
             email="austingraham731@gmail.com",
-            password="password"
+            password="password",
+            phone_number="Number"
         )
         assert_that(coll.insert(user, check_member=True), is_(True))
 
@@ -74,6 +76,7 @@ class TestUserModel(UserTestBase):
             first_name="Austin",
             last_name="Graham",
             email="austingraham731@gmail.com",
+            phone_number="Number",
             access_token=access_token
         )
         assert_that(user.username, is_("austingraham731@gmail.com"))
@@ -85,6 +88,7 @@ class TestUserModel(UserTestBase):
             first_name="Austin",
             last_name="Graham",
             email="austingraham731@gmail.com",
+            phone_number="Number",
             access_token=access_token
         )
         assert_that(user.username, is_("austingraham731@gmail.com"))

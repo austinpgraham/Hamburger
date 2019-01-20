@@ -8,7 +8,6 @@
             name="ebay"
             provider="hamburger.dataserver.provider.ebay.EbayProvider"
             fetcher="hamburger.dataserver.provider.ebay.EbayFetcher"
-            parser="hamburger.dataserver.provider.ebay.EbayParser"
-            appID="AustinGr-Hamburge-PRD-660b9b3c7-a4f8c441"/>
+            parser="hamburger.dataserver.provider.ebay.EbayParser"/>
 
 </configure>

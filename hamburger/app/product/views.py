@@ -47,9 +47,10 @@ class ProductPostView(AbstractAuthenticatedView):
         provider_name = self.request.json[PROVIDER]
         identifier = self.request.json[IDENTIFIER]
         provider = component.queryUtility(IProvider, name=provider_name, default=None)()
-        if provider is None:
+        appID = self.request.registry.settings.get("{}.appid".format(provider_name))
+        if provider is None or appID is None:
             return HTTPBadRequest("Provider '{}' not found.".format(provider_name))
-        product = provider.get_product(identifier)
+        product = provider.get_product(identifier, appID)
         if product is None:
             return HTTPBadRequest("Product '{}' could not be parsed.".format(identifier))
         if not self.context.insert(product):

@@ -14,7 +14,10 @@ from zope.component import getGlobalSiteManager
 
 from hamburger.dataserver import appmaker
 
+from hamburger.dataserver.dataserver.interfaces import ISimonAPI
 from hamburger.dataserver.dataserver.interfaces import IOAuthSettings
+
+from hamburger.dataserver.dataserver.model import SimonAPI
 
 from hamburger.dataserver.provider.interfaces import IStripePayment
 
@@ -98,6 +101,10 @@ def main(global_config, **settings): # pragma: no cover
     # Configure stripe
     sp = StripePayment(settings['stripe.sk'])
     sm.registerUtility(sp, IStripePayment)
+
+    # Configure Simon API
+    api = SimonAPI(settings['simon.url'])
+    sm.registerUtility(api, ISimonAPI)
 
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)

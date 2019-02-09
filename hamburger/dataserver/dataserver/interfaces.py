@@ -1,6 +1,7 @@
 from zope import interface
 
 from zope.schema import List
+from zope.schema import TextLine
 
 
 class IDataserver(interface.Interface):
@@ -95,3 +96,11 @@ class IRedundancyCheck(interface.Interface):
         """
         Check redundancy against this object.
         """
+
+
+class ISimonAPI(interface.Interface):
+    """
+    A Marker for the Simon API entrypoint
+    """
+    endpoint = TextLine(title="API endpoint",
+                        required=True)

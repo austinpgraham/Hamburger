@@ -2,6 +2,7 @@ from persistent.mapping import PersistentMapping
 
 from zope import interface
 
+from hamburger.dataserver.dataserver.interfaces import ISimonAPI
 from hamburger.dataserver.dataserver.interfaces import IDataserver
 from hamburger.dataserver.dataserver.interfaces import ICollection
 from hamburger.dataserver.dataserver.interfaces import IContained
@@ -45,3 +46,13 @@ class Contained(ExternalPersistent):
 
     def get_key(self):
         return getattr(self, self.__key__)
+
+
+@interface.implementer(ISimonAPI)
+class SimonAPI():
+    """
+    Returns the configured Simon API endpoint.
+    """
+
+    def __init__(self, endpoint):
+        self.endpoint = endpoint

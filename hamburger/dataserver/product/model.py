@@ -1,4 +1,4 @@
-from DateTime import DateTime
+from datetime import datetime
 
 from random import randint
 
@@ -111,7 +111,7 @@ class HamProductCollection(Collection, Contained):
         self.title = title
         self.__name__ = self.title
         self.is_public = is_public
-        self.created_at = DateTime()
+        self.created_at = datetime.now().date()
         self.access_token = "" if is_public else self._gen_token()
 
     def insert(self, new_obj, check_member=True):

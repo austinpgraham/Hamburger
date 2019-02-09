@@ -19,13 +19,6 @@ ZCML_STRING = """
 
     <include package="hamburger.dataserver.provider" file="meta.zcml" />
 
-    <ham:registerProvider
-            name="ebay"
-            provider="hamburger.dataserver.provider.ebay.EbayProvider"
-            fetcher="hamburger.dataserver.provider.ebay.EbayFetcher"
-            parser="hamburger.dataserver.provider.ebay.EbayParser"
-            appID="AustinGr-Hamburge-PRD-660b9b3c7-a4f8c441"/>
-
 </configure>
 """
 
@@ -34,5 +27,5 @@ class TestZCML(ProviderTestBase):
 
     def test_registration(self):
         xmlconfig(StringIO(ZCML_STRING))
-        provider = component.getUtility(IProvider, "ebay")
-        assert_that(provider, is_not(None))
+        # provider = component.getUtility(IProvider, "ebay")
+        # assert_that(provider, is_not(None))

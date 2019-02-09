@@ -29,7 +29,8 @@ requires = [
     'relstorage',
     'ebaysdk',
     'stripe',
-    'pyhamcrest'
+    'pyhamcrest',
+    'fudge'
     ]
 
 tests_require = [

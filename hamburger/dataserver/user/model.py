@@ -12,8 +12,6 @@ from pyramid.security import Authenticated
 
 from hamburger.dataserver.user.interfaces import IUser
 from hamburger.dataserver.user.interfaces import IAuthedUser
-from hamburger.dataserver.user.interfaces import IGoogleUser
-from hamburger.dataserver.user.interfaces import IFacebookUser
 from hamburger.dataserver.user.interfaces import IUserCollection
 from hamburger.dataserver.user.interfaces import IPermissionCollection
 
@@ -130,16 +128,6 @@ class _OAuthUser(HamUser):
             exp_date = self.access_token['exp_date']
             now = time.time()
             return self if now < exp_date else None
-
-
-@interface.implementer(IFacebookUser)
-class HamFacebookUser(_OAuthUser):
-    pass
-
-
-@interface.implementer(IGoogleUser)
-class HamGoogleUser(_OAuthUser):
-    pass
 
 
 @interface.implementer(IUserCollection)

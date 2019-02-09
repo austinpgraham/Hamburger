@@ -37,9 +37,6 @@ from hamburger.dataserver.product.model import HamProductCollection
 from hamburger.dataserver.user.interfaces import IUser
 from hamburger.dataserver.user.interfaces import IUserCollection
 
-from hamburger.dataserver.user.model import HamGoogleUser
-from hamburger.dataserver.user.model import HamFacebookUser
-
 
 @view_config(context=IUserCollection,
              request_method="POST")
@@ -119,18 +116,6 @@ class OAuthUserLoginView(AbstractView):
                 self.context.insert(new_user, check_member=True)
                 response.headers = new_user.authenticate(self.request)
         return response
-
-
-@view_config(name="facebook")
-class LoginUserFacebookView(OAuthUserLoginView):
-    __provider__ = "fb"
-    __user_class__ = HamFacebookUser
-
-
-@view_config(name="google")
-class LoginUserGoogleView(OAuthUserLoginView):
-    __provider__ = "google"
-    __user_class__ = HamGoogleUser
 
 
 @view_config(context=IUser,

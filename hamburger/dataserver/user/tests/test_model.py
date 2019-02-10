@@ -1,3 +1,5 @@
+import fudge
+
 from hamcrest import is_
 from hamcrest import is_not
 from hamcrest import has_entries
@@ -16,7 +18,9 @@ from hamburger.dataserver.product.model import HamProductCollection
 
 class TestUserModel(UserTestBase):
 
-    def test_user(self):
+    @fudge.patch("hamburger.dataserver.user.model.HamUser._simon_create")
+    def test_user(self, _sc):
+        _sc.is_callable().returns(201)
         # Test that a user creates correctly
         user = HamUser(
             username="pgreazy",
@@ -24,7 +28,8 @@ class TestUserModel(UserTestBase):
             last_name="Graham",
             email="austingraham731@gmail.com",
             password="password",
-            phone_number="number"
+            phone_number="number",
+            birthday="21 May 1995"
         )
         # Create a fake collection
         pc = HamProductCollection(
@@ -54,7 +59,9 @@ class TestUserModel(UserTestBase):
             'password': 'password'
         })))
 
-    def test_user_collection(self):
+    @fudge.patch("hamburger.dataserver.user.model.HamUser._simon_create")
+    def test_user_collection(self, _sc):
+        _sc.is_callable().returns(201)
         # Test user insert
         coll = HamUserCollection()
         user = HamUser(
@@ -63,6 +70,7 @@ class TestUserModel(UserTestBase):
             last_name="Graham",
             email="austingraham731@gmail.com",
             password="password",
-            phone_number="Number"
+            phone_number="Number",
+            birthday="21 May 1995"
         )
         assert_that(coll.insert(user, check_member=True), is_(True))

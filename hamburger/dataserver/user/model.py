@@ -1,5 +1,8 @@
 import copy
 import time
+import requests
+
+from urllib.parse import urljoin
 
 from zope import interface
 from zope import component
@@ -17,6 +20,7 @@ from hamburger.dataserver.user.interfaces import IPermissionCollection
 
 from hamburger.dataserver.product.model import HamUserProductListCollection
 
+from hamburger.dataserver.dataserver.interfaces import ISimonAPI
 from hamburger.dataserver.dataserver.interfaces import IRedundancyCheck
 
 from hamburger.dataserver.dataserver.adapters import to_external_object
@@ -47,10 +51,16 @@ class HamUser(Contained):
         'password',
     ]
 
+    def _simon_create(self, data):
+        simon_endpoint = component.getUtility(ISimonAPI).endpoint
+        url = urljoin(simon_endpoint, "/api/users")
+        results = requests.post(url, json=data)
+        return results.status_code
+
     def __init__(self, username=None, first_name=None,
                  last_name=None, email=None,
                  password=None, phone_number=None,
-                 profile_pic=""):
+                 profile_pic="", birthday=None):
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
@@ -58,16 +68,49 @@ class HamUser(Contained):
         self.password = password
         self.phone_number = phone_number
         self.profile_pic = profile_pic
+        self.birthday = birthday
+        self.token = None
         self._lists = HamUserProductListCollection()
         self._lists.__parent__ = self
+        data = {
+            'username': username,
+            'first_name': first_name,
+            'last_name': last_name,
+            'email': email,
+            'phone': phone_number,
+            'birthday': birthday,
+            'password': password
+        }
+        # Request Simon creation
+        result = self._simon_create(data)
+        assert result == 201
+
+
+    def _simon_login(self, data):
+        """
+        Get login token from Simon
+        """
+        simon_endpoint = component.getUtility(ISimonAPI).endpoint
+        url = urljoin(simon_endpoint, "/api/users/basic/{}/login".format(self.username))
+        results = requests.post(url, json=data)
+        return results.json().get('token', None)
 
     def authenticate(self, password, request):
-        if check_hash(password, self.password):
-            return remember(request, self.get_key())
+        data = {'username': self.username, 'password': self.password}
+        token = self._simon_login(data)
+        if token is not None:
+            self.token = token
+            return remember(request, token)
         return None # pragma: no cover
 
     def deauthenticate(self, request):
         return forget(request) # pragma: no cover
+
+    def delete(self):
+        simon_endpoint = component.getUtility(ISimonAPI).endpoint
+        url = urljoin(simon_endpoint, "/api/users/basic/{}".format(self.username))
+        result = requests.delete(url)
+        return result.status_code
 
     def check_auth(self):
         return self

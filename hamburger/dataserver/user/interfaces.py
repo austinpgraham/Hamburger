@@ -1,5 +1,6 @@
 from zope import interface
 
+from zope.schema import Date
 from zope.schema import Dict
 from zope.schema import List
 from zope.schema import Text
@@ -28,6 +29,10 @@ class IUser(interface.Interface):
     profile_pic = Text(title="Path to Profile Pic",
                        required=False,
                        default="")
+    birthday = Date(title="Users's birthday",
+                    required=True)
+    token = Text(title="Access token from Simon",
+                 required=False)
 
     def authenticate(user, request):
         """
@@ -42,6 +47,16 @@ class IUser(interface.Interface):
     def check_auth():
         """
         Check user authentication still valid.
+        """
+    
+    def verify():
+        """
+        Verify the current user token
+        """
+
+    def delete():
+        """
+        Delete a particular user
         """
 
 

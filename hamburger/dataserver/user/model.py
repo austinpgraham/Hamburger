@@ -55,7 +55,7 @@ class HamUser(Contained):
         simon_endpoint = component.getUtility(ISimonAPI).endpoint
         url = urljoin(simon_endpoint, "/api/users")
         results = requests.post(url, json=data)
-        return results.status_code
+        return results.status_code, results.json()
 
     def __init__(self, username=None, first_name=None,
                  last_name=None, email=None,
@@ -82,8 +82,9 @@ class HamUser(Contained):
             'password': password
         }
         # Request Simon creation
-        result = self._simon_create(data)
-        assert result == 201
+        code, error = self._simon_create(data)
+        if code != 201:
+            raise ValueError(str(error))
 
 
     def _simon_login(self, data):
@@ -94,6 +95,15 @@ class HamUser(Contained):
         url = urljoin(simon_endpoint, "/api/users/basic/{}/login".format(self.username))
         results = requests.post(url, json=data)
         return results.json().get('token', None)
+    
+    def _simon_logout(self):
+        """
+        Log the user out of Simon
+        """
+        simon_endpoint = component.getUtility(ISimonAPI).endpoint
+        url = urljoin(simon_endpoint, "/api/users/basic/{}/logout".format(self.username))
+        result = requests.get(url, headers={"Simon": self.token})
+        return result.status_code
 
     def authenticate(self, password, request):
         data = {'username': self.username, 'password': self.password}
@@ -104,6 +114,9 @@ class HamUser(Contained):
         return None # pragma: no cover
 
     def deauthenticate(self, request):
+        result = self._simon_logout()
+        if result != 200:
+            return None
         return forget(request) # pragma: no cover
 
     def delete(self):

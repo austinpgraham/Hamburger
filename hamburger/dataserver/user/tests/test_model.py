@@ -20,7 +20,7 @@ class TestUserModel(UserTestBase):
 
     @fudge.patch("hamburger.dataserver.user.model.HamUser._simon_create")
     def test_user(self, _sc):
-        _sc.is_callable().returns(201)
+        _sc.is_callable().returns((201, None))
         # Test that a user creates correctly
         user = HamUser(
             username="pgreazy",
@@ -61,7 +61,7 @@ class TestUserModel(UserTestBase):
 
     @fudge.patch("hamburger.dataserver.user.model.HamUser._simon_create")
     def test_user_collection(self, _sc):
-        _sc.is_callable().returns(201)
+        _sc.is_callable().returns((201, None))
         # Test user insert
         coll = HamUserCollection()
         user = HamUser(

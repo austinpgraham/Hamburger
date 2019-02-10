@@ -29,7 +29,7 @@ class TestAdapters(UserTestBase):
     @fudge.patch("hamburger.dataserver.user.model.HamUser._simon_create")
     def test_permission_collection(self, _sc):
         # Test owning user has all permissions
-        _sc.is_callable().returns(201)
+        _sc.is_callable().returns((201, None))
         user = HamUser(
             username="pgreazy",
             first_name="Austin",

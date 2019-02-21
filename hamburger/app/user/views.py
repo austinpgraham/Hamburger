@@ -47,8 +47,6 @@ class CreateUserView(AbstractView):
 
     def __call__(self):
         new_user = IUser(self.request)
-        if not new_user.is_complete():
-            return HTTPBadRequest()
         checks = component.subscribers((new_user,), IRedundancyCheck)
         if any([check.check(new_user, self.request) for check in checks]) or\
            not self.context.insert(new_user, check_member=True):
